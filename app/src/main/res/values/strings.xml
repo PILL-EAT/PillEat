@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">pilleat</string>
+
+    <string name="find"><u>이메일/비밀번호찾기</u></string>
+    <string name="join"><u>회원가입</u></string>
+    <string name="join_mode"><u>보호자 모드</u></string>
+    <string name="search_result">
+         \t유산균은 섭취 후 2~5일(보통 3일) 사이 급감하기 때문에 꾸준히 먹는 게 좋다고 한다.\n
+ \t또 언제 먹어야 되는지도 논쟁이 있는데, 식전 공복에 먹어야 좋다는 주장도 많지만, 식후 1~2시간 정도에 먹는 게 좋다는 주장도 있는 등 전문가들 사이에서도 의견이 갈리는 편이다.\n
+ \t유산균이 위산과 담즙산 등을 견디고 살아서 장까지 가야 하는데 어느 쪽이 유리한가는 저마다 시각이 다르기 때문이다.\n
+ \t때문에 생존률을 높이고자 코팅을 하는 제품도 있는데 이것도 실제로 도움이 되는지에 대해선 의견이 분분하다.\n
+    </string>
+</resources>
