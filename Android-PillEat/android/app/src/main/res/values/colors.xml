@@ -8,9 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="main_green">#82D280</color>
+    <color name="main_green">#2196F3</color>
     <color name="error">#FF0000</color>
     <color name="placeholder_gray">#909090</color>
-    <color name="unfocus_green">#B1C6B0</color>
-    <color name="back_green">#1782D280</color>
+    <color name="unfocus_green">#84C1F1</color>
+    <color name="back_green">#362196F3</color>
 </resources>

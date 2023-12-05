@@ -14,6 +14,7 @@
         android:fontFamily="@font/main_font"
         android:textColor="@color/main_green"
         android:textSize="40dp"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
