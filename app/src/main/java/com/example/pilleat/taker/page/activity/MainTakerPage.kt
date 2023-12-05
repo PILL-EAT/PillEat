@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.pilleat.all.page.activity.SettingPage
 import com.example.pilleat.databinding.ActivityMaintakerBinding
 import com.example.pilleat.taker.page.dialog.BluetoothDialog
 
@@ -42,6 +43,11 @@ class MainTakerPage: AppCompatActivity() {
 
         binding.mainTakerHomeBtn.setOnClickListener {
             val intent = Intent(this@MainTakerPage, HomeTakerPage::class.java)
+            startActivity(intent)
+        }
+
+        binding.mainTakerSettingBtn.setOnClickListener {
+            val intent = Intent(this@MainTakerPage, SettingPage::class.java)
             startActivity(intent)
         }
     }

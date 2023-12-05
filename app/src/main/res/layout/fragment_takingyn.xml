@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/takingyn_date_lo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        app:layout_constraintVertical_bias="0.05"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/takingyn_before_btn"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="이전"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/main_font"
+            android:background="@drawable/taking_btn_disable"/>
+
+        <TextView
+            android:id="@+id/takingyn_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10월 26일"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="30dp"
+            android:fontFamily="@font/main_font"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/takingyn_next_btn"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="다음"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/main_font"
+            android:background="@drawable/taking_btn_disable"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/takingyn_data_lo"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:background="@drawable/main_edittext"
+        android:layout_marginTop="65dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/takingyn_date_lo"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo"
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/takingyn_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="유산균"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:fontFamily="@font/main_font"
+            android:layout_gravity="center_vertical"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/takingyn_no_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:background="@drawable/taking_btn_disable"
+            android:text="복용 완료"
+            android:textColor="@color/black"
+            android:fontFamily="@font/main_font"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="70dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/takingyn_yes_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:background="@drawable/taking_btn"
+            android:text="복용 완료"
+            android:textColor="@color/black"
+            android:fontFamily="@font/main_font"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="70dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

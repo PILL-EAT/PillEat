@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.pilleat">
 
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -36,6 +37,8 @@
         <activity android:name=".all.page.activity.FindAccountPage"/>
         <activity android:name=".all.page.activity.JoinPage"/>
         <activity android:name=".all.page.activity.SearchPage"/>
+        <activity android:name=".all.page.activity.SettingPage"/>
+        <activity android:name=".all.page.activity.UpdatePage"/>
 
         <activity android:name=".taker.page.activity.MainTakerPage"/>
         <activity android:name=".taker.page.activity.EnrollPage"/>

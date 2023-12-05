@@ -51,6 +51,27 @@
         app:layout_constraintTop_toBottomOf="@id/main_taker_dl_off_btn"
         app:layout_constraintStart_toStartOf="@id/main_taker_dl_off_btn"
         app:layout_constraintEnd_toEndOf="@id/main_taker_dl_off_btn"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="@id/main_taker_dl_connect_tv"/>
+
+    <TextView
+        android:id="@+id/main_taker_dl_connect_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="페어링된 목록"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/main_font"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@id/main_taker_dl_connect_btn"
+        app:layout_constraintTop_toBottomOf="@id/main_taker_dl_connect_btn"/>
+
+    <ListView
+        android:id="@+id/main_taker_dl_connect_lv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_bluetooth"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_taker_dl_connect_tv"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
