@@ -13,7 +13,7 @@ router.get('/your/api/endpoint', (req, res) => {
     user.test(req, res);
 });
 
-//로그인
+//로그인 (완성)
 router.post('/login', (req, res) => {
     user.login(req, res);
 });
@@ -23,13 +23,13 @@ router.get('/logout', (req, res) => {
     user.logout(req, res);
 });
 
-//회원가입
+//회원가입 (완성)
 router.post('/join', (req, res) => {
     user.join(req, res);
 });
 //회원탈퇴
 router.delete('/userDelete/:userId', (req, res) => {
-    user.join(req, res);
+    user.delete(req, res);
 });
 
 

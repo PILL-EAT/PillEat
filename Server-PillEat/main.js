@@ -16,6 +16,7 @@ var userRouter = require('./router/userRouter');
 var takerRouter = require('./router/takerRouter');
 var protectorRouter = require('./router/protectorRouter');
 var managerRouter = require('./router/managerRouter');
+var drugRouter = require('./router/drugRouter');
 
 app.get('/', (req, res) => {
     console.log()
@@ -28,7 +29,10 @@ db.query('select * from taker',(err,result)=>{
 
 
 app.use('/user', userRouter);
+app.use('/drug', drugRouter);
 app.use('/manager', managerRouter);
+
+
 
 app.listen(port,'0.0.0.0', () => {
     console.log(`Server is running at http://localhost:${port}`);

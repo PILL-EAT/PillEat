@@ -1,9 +1,11 @@
 const express = require('express');
 var router = express.Router()
 
-var user = require('../lib/user');
+var manager = require('../lib/manager');
 
-//test용
+//사용자 정보 목록 요청
 router.get('/userList', (req, res) => {
-    user.userList(req, res);
+    manager.userList(req, res);
 });
+
+module.exports = router;
