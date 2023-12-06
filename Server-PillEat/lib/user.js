@@ -1,11 +1,31 @@
 var db = require('./db');
 
 module.exports = {
+
+    //테스트용
+    test2 : (req,res)=>{
+        var loginData = req.body;
+        console.log('test Received data:', loginData);
+    },
+    //테스트용
+    test : (req,res)=>{
+        console.log("hi")
+        db.query('select * from taker',(err,result)=>{
+            if(err){
+                throw err;
+            }
+            const responseData = {
+                buttonText: result[0].taker_email,
+                name: result[0].taker_password
+            }
+            res.json(responseData);
+        })
+    },
     //로그인 기능
     login : (req,res)=>{
         var loginData = req.body;
         console.log('Received data:', loginData);
-        db.query('select * from taker where taker_email =? ,taker_password = ?',
+        db.query('select * from taker where taker_email and taker_password = ?',
         [loginData.email, loginData.password], (err,result)=>{
             if(err){
                 throw err;
@@ -57,6 +77,4 @@ module.exports = {
             }
         })
     },
-
-
 }

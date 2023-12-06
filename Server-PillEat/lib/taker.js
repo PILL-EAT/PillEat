@@ -55,6 +55,11 @@ module.exports = {
             res.json(responseData);
         });
 
+    },
+
+    //복용 완료 수동 입력
+    finish: (req,res) => {
+        
     }
 
     

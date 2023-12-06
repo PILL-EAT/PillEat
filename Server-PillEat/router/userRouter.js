@@ -3,6 +3,15 @@ var router = express.Router()
 
 var user = require('../lib/user');
 
+//test용
+router.post('/post', (req, res) => {
+    user.test2(req, res);
+});
+
+//test용
+router.get('/your/api/endpoint', (req, res) => {
+    user.test(req, res);
+});
 
 //로그인
 router.post('/login', (req, res) => {
