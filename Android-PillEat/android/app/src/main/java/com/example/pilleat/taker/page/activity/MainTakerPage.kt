@@ -1,14 +1,8 @@
 package com.example.pilleat.taker.page.activity
 
 import android.Manifest
-import android.app.Activity
-import android.app.Dialog
-import android.bluetooth.BluetoothAdapter
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.pilleat.all.page.activity.SettingPage
@@ -37,7 +31,7 @@ class MainTakerPage: AppCompatActivity() {
         }
 
         binding.mainTakerEnrollBtn.setOnClickListener {
-            val intent = Intent(this@MainTakerPage, EnrollPage::class.java)
+            val intent = Intent(this@MainTakerPage, EnrollPillPage::class.java)
             startActivity(intent)
         }
 

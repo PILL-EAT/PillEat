@@ -46,6 +46,8 @@ class SettingPage: AppCompatActivity() {
             .setPositiveButton("예") { dialog, which ->
                 // 임시 설정 -> 로그아웃 API 연결
                 Toast.makeText(this@SettingPage, "로그아웃되었습니다.", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@SettingPage, StartPage::class.java)
+                startActivity(intent)
             }
             .setNeutralButton("아니오", null)
             .create()

@@ -19,6 +19,6 @@ class LandingPage: AppCompatActivity() {
             val intent = Intent(this@LandingPage, StartPage::class.java) // 임시설정 -> 자동로그인 시, MainTakerPage or MainProtectorPage로 이동
             startActivity(intent)
             finish()
-        }, 1000)
+        }, 800)
     }
 }

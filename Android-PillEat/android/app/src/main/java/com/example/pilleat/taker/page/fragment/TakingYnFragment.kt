@@ -35,6 +35,7 @@ class TakingYnFragment: Fragment() {
             updateDate()
         }
 
+        // 보호자 계정으로 로그인 시, 클릭 X
         binding.takingynNoBtn.setOnClickListener {
             doTaking()
         }

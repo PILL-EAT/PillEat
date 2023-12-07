@@ -44,6 +44,28 @@
         android:id="@+id/start_checking"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:text="복용자"
+        android:textSize="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/start_checking2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:text="보호자"
+        android:textSize="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/start_checking"/>
+
+    <Button
+        android:id="@+id/start_checking3"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:text="관리자"
+        android:textSize="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/start_checking2"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
