@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/findemail_logo_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_img"
+        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <EditText
+        android:id="@+id/findemail_name_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_edittext"
+        android:layout_marginTop="55dp"
+        android:drawableLeft="@drawable/logo"
+        android:drawablePadding="10dp"
+        android:hint="이름"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:fontFamily="@font/main_font"
+        app:layout_constraintTop_toBottomOf="@id/findemail_logo_iv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/findemail_phone_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_edittext"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/logo"
+        android:drawablePadding="10dp"
+        android:hint="이메일"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:fontFamily="@font/main_font"
+        app:layout_constraintTop_toBottomOf="@id/findemail_name_et"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/findemail_birth_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_edittext"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/logo"
+        android:drawablePadding="10dp"
+        android:hint="생년월일 8자리"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:fontFamily="@font/main_font"
+        app:layout_constraintTop_toBottomOf="@id/findemail_phone_et"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_btn"
+        android:text="비밀번호 찾기"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:fontFamily="@font/main_font"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="@id/findemail_birth_et"
+        app:layout_constraintTop_toBottomOf="@id/findemail_birth_et"
+        app:layout_constraintEnd_toEndOf="@id/findemail_birth_et" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

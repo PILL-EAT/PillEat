@@ -6,7 +6,7 @@ import com.example.pilleat.all.response.AuthResponse
 import com.example.pilleat.all.table.User
 import com.example.pilleat.all.view.LoginView
 import com.example.pilleat.getRetrofit
-import com.example.pilleat.taker.retrofit_interface.AuthRetrofitInterface
+import com.example.pilleat.all.retrofit_interface.AuthRetrofitInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

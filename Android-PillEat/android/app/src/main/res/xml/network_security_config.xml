@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!-- 임의의 신뢰할 수 있는 인증서 추가 (예: apis.data.go.kr의 인증서) -->
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

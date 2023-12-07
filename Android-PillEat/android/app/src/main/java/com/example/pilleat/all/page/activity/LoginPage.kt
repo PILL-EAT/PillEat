@@ -2,6 +2,7 @@ package com.example.pilleat.all.page.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pilleat.all.response.AuthResponse
@@ -25,19 +26,9 @@ class LoginPage : AppCompatActivity(), LoginView {
             login()
         }
 
-        binding.loginFindAccountTv.setOnClickListener {
-            findAccountPage()
-        }
-
         binding.loginJoinTv.setOnClickListener {
             joinPage()
         }
-    }
-
-    // 이메일/비밀번호찾기 페이지로 이동
-    private fun findAccountPage() {
-        val intent = Intent(this@LoginPage, FindAccountPage::class.java)
-        startActivity(intent)
     }
 
     // 회원가입 페이지로 이동
@@ -52,10 +43,19 @@ class LoginPage : AppCompatActivity(), LoginView {
         startActivity(intent)
     }
 
+    // jwt 저장 함수 -> api용
+    private fun saveJwt(jwt: String) {
+        val spf = getSharedPreferences("auth", MODE_PRIVATE)
+        val editor = spf.edit()
+
+        editor.putString("jwt", jwt) // 어떤 키 값으로 저장할 지
+        editor.apply()
+        Log.d("LoginPage-JWT", jwt)
+    }
+
     private fun login() {
         // 이메일, 비밀번호 입력창 중, 입력되지 않은 부분이 있다면 토스트 메세지
-        if (binding.loginInputEmailEt.text.toString()
-                .isEmpty() || binding.loginInputPwEt.text.toString().isEmpty()
+        if (binding.loginInputEmailEt.text.toString().isEmpty() || binding.loginInputPwEt.text.toString().isEmpty()
         ) {
             Toast.makeText(this@LoginPage, "모두 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
