@@ -1,43 +1,56 @@
 var db = require('./db');
 
 module.exports = {
-    //사용자 정보 목록 요청
-    userList: (req,res)=>{
-        //taker와 protector table 데이터 결합해서 반환
-        db.query(`SELECT taker_id AS user_id,
-                taker_email AS user_email,
-                taker_password AS user_password,
-                taker_name AS user_name,
-                taker_birth AS user_birth,
-                taker_number AS user_number,
-                taker_date AS user_date,
-                null AS taker_id,
-                'taker' AS user_type
-                FROM taker
-                UNION
-                SELECT 
-                protector_id AS user_id,
-                protector_email AS user_email,
-                protector_password AS user_password,
-                protector_name AS user_name,
-                protector_birth AS user_birth,
-                protector_number AS user_number,
-                protector_date AS user_date,
-                taker_id AS taker_id, 
-                'protector' AS user_type
-                FROM protector;`, (err, result) => {
-            if (err) {
-                throw err;
+    // 사용자 정보 목록 요청
+    userList: (req, res) => {
+      console.log("manager userList");
+  
+      db.query(`
+        SELECT
+            taker_name AS name,
+            taker_date AS time,
+            taker_birth AS birth,
+            'taker' AS mode
+        FROM taker
+        UNION
+        SELECT
+            protector_name AS name,
+            protector_date AS time,
+            protector_birth AS birth,
+            'protector' AS mode
+        FROM protector;
+      `, (err, result) => {
+        if (err) {
+          console.error(err);
+          const responseData = {
+            isSuccess: false,
+            code: 600,
+            message: "요청에 실패하였습니다.",
+            result: null
+          };
+          console.log(result);
+          res.json(responseData);
+        } else {
+          const users = result.map(user => ({
+            name: user.name,
+            time: user.time,
+            birth: user.birth,
+            mode: user.mode,
+          }));
+  
+          const responseData = {
+            isSuccess: true,
+            code: 200,
+            message: "요청에 성공하였습니다.",
+            result: {
+              users: users
             }
-            const responseData = {
-                isSuccess: true,
-                code: 200,
-                message: "요청에 성공하였습니다.",
-                result: result
-            };
-    
-            res.json(responseData);
-        });
-
-    },
-}
+          };
+          console.log(responseData)
+          console.log(JSON.stringify(result, null, 2));
+          res.json(responseData);
+        }
+      });
+    }
+  };
+  
