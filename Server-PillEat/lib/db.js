@@ -4,9 +4,9 @@ var mysql = require('mysql');
 // MySQL 데이터베이스 연결 설정
 var db = mysql.createConnection({
     host: 'localhost',        // 데이터베이스 호스트 주소
-    user: 'root',             // 데이터베이스 사용자 이름
-    password: 'root',         // 데이터베이스 암호
-    database: 'pilleatDB',    // 사용할 데이터베이스 이름
+    user: 'dbid233',             // 데이터베이스 사용자 이름
+    password: 'dbpass233',         // 데이터베이스 암호
+    database: 'db23322',    // 사용할 데이터베이스 이름
     multipleStatements: true  // 여러 SQL 문을 하나의 문자열로 전달할 수 있도록 허용
 });
 

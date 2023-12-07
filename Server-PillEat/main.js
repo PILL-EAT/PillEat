@@ -3,7 +3,7 @@
 
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 60013;
 const bodyParser = require('body-parser');
 
 var db = require('./lib/db');///
@@ -20,22 +20,24 @@ var drugRouter = require('./router/drugRouter');
 
 app.get('/', (req, res) => {
     console.log()
-    res.send('hi');
+    res.send('your server is on');
 });
 
-db.query('select * from taker',(err,result)=>{
+db.query('select * from user',(err,result)=>{
     console.log(result)
 })
 
 
 app.use('/user', userRouter);
+app.use('/taker', takerRouter);
+app.use('/protector', protectorRouter);
 app.use('/drug', drugRouter);
 app.use('/manager', managerRouter);
 
 
 
 app.listen(port,'0.0.0.0', () => {
-    console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://ceprj.gachon.ac.kr:${port}`);
 });
 
 
