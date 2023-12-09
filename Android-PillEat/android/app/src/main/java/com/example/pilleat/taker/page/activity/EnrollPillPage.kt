@@ -1,81 +1,98 @@
 package com.example.pilleat.taker.page.activity
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.pilleat.all.page.activity.LoginPage
-import com.example.pilleat.all.service.AuthService
-import com.example.pilleat.all.table.User
+import com.example.pilleat.all.response.UserResult
 import com.example.pilleat.databinding.ActivityEnrollBinding
 import com.example.pilleat.taker.response.EnrollPillResponse
 import com.example.pilleat.taker.service.EnrollPillService
 import com.example.pilleat.taker.table.EnrollPill
 import com.example.pilleat.taker.view.EnrollPillView
+import com.google.gson.Gson
 import retrofit2.Response
 
-class EnrollPillPage: AppCompatActivity(), TimePicker.OnTimeChangedListener, EnrollPillView {
+class EnrollPillPage: AppCompatActivity(), EnrollPillView {
     private lateinit var binding: ActivityEnrollBinding
-    private lateinit var mTimePicker: TimePicker
-    private lateinit var user: User
+    private lateinit var userResult: UserResult
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEnrollBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mTimePicker = binding.enrollTimeTp
-        mTimePicker.setIs24HourView(true)
-        mTimePicker.setOnTimeChangedListener(this@EnrollPillPage)
+        userResult = getUserData()!!
 
-        binding.enrollInputTimeEt.inputType = 0 // 키보드 안뜨게 하기
+        binding.enrollTimeBtn.setOnClickListener {
+            enroll()
+            binding.enrollBtn.isEnabled = true
+        }
 
         binding.enrollBtn.setOnClickListener {
-            enroll()
+            connectEnroll(enrollPill(), userResult.id)
         }
+    }
 
-        // 등록할 시간 입력창 누르면 TimePicker 보임
-        binding.enrollInputTimeEt.setOnClickListener {
-            binding.enrollTimeTp.visibility = View.VISIBLE
-        }
+    private fun getUserData(): UserResult? {
+        val spf = getSharedPreferences("userData", MODE_PRIVATE)
+        val userJson = spf.getString("userData", null)
 
-        // 배경 레이아웃 클릭 시, timepicker 내려감
-        binding.enrollLo.setOnClickListener {
-            binding.enrollTimeTp.visibility = View.GONE
+        return if (userJson != null) {
+            val gson = Gson()
+            gson.fromJson(userJson, UserResult::class.java)
+        } else {
+            null
         }
     }
 
     private fun enroll() {
-        if(binding.enrollInputNameEt.text.toString().isEmpty() || binding.enrollInputCategoryEt.text.toString().isEmpty() || binding.enrollInputVolumnEt.text.toString().isEmpty() || binding.enrollInputTimeEt.text.toString().isEmpty()) {
+        if (binding.enrollInputNameEt.text.toString().isEmpty() ||
+            binding.enrollInputCategoryEt.text.toString().isEmpty() ||
+            binding.enrollInputDateEt.text.toString().isEmpty()) {
             Toast.makeText(this@EnrollPillPage, "모두 입력해주세요.", Toast.LENGTH_SHORT).show()
-            return
-        } else {
-            // 약 등록 API 연결 -> 임시설정
-            Toast.makeText(this@EnrollPillPage, "등록되었습니다.", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this@EnrollPillPage, MainTakerPage::class.java)
-            startActivity(intent)
         }
 
+        if (binding.enrollInputDateEt.text.toString() == "1") {
+            binding.enrollTime1Et.visibility = View.VISIBLE
+            if(binding.enrollTime1Et.text.toString().isEmpty()) {
+                Toast.makeText(this@EnrollPillPage, "모두 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return
+            }
+        } else if (binding.enrollInputDateEt.text.toString() == "2") {
+            binding.enrollTime1Et.visibility = View.VISIBLE
+            binding.enrollTime2Et.visibility = View.VISIBLE
+            if(binding.enrollTime1Et.text.toString().isEmpty() || binding.enrollTime2Et.text.toString().isEmpty()) {
+                Toast.makeText(this@EnrollPillPage, "모두 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return
+            }
+        } else if (binding.enrollInputDateEt.text.toString() == "3") {
+            binding.enrollTime1Et.visibility = View.VISIBLE
+            binding.enrollTime2Et.visibility = View.VISIBLE
+            binding.enrollTime3Et.visibility = View.VISIBLE
+            if(binding.enrollTime1Et.text.toString().isEmpty() || binding.enrollTime2Et.text.toString().isEmpty() || binding.enrollTime3Et.text.toString().isEmpty()) {
+                Toast.makeText(this@EnrollPillPage, "모두 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+    }
+
+    private fun connectEnroll(enrollPill: EnrollPill, userId: Int) {
         val enrollPillService = EnrollPillService()
         enrollPillService.setEnrollPillView(this@EnrollPillPage)
 
-        enrollPillService.enrollPill(enrollPill())
-    }
-
-    override fun onTimeChanged(timePicker: TimePicker?, hour: Int, minute: Int) {
-        binding.enrollInputTimeEt.setText(hour.toString() + "시 " + minute.toString() + "분")
+        enrollPillService.enrollPill(enrollPill, userId)
     }
 
     private fun enrollPill(): EnrollPill {
         val pill_name: String = binding.enrollInputNameEt.text.toString()
-        val pill_time: String = binding.enrollInputTimeEt.text.toString()
-        val pill_volumn: String = binding.enrollInputVolumnEt.text.toString()
         val pill_category: String = binding.enrollInputCategoryEt.text.toString()
+        val pill_date: Int = binding.enrollInputDateEt.text.toString().toInt()
+        val pill_time1: String = binding.enrollTime1Et.text.toString()
+        val pill_time2: String = binding.enrollTime2Et.text.toString()
+        val pill_time3: String = binding.enrollTime3Et.text.toString()
 
-        return EnrollPill(pill_name, pill_category, pill_time, pill_volumn) // 사용자의 입력값 리턴
+        return EnrollPill(pill_name, pill_category, pill_date, pill_time1, pill_time2, pill_time3) // 사용자의 입력값 리턴
     }
 
     override fun onEnrollPillSuccess() {

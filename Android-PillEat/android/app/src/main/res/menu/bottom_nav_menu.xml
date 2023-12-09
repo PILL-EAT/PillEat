@@ -4,13 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/searchFragment"
-        app:showAsAction="always"
-        android:enabled="true"
-        android:title="검색"
-        android:icon="@drawable/search_btn"
-        tools:ignore="AlwaysShowAction" />
-    <item
         android:id="@+id/takingYnFragment"
         app:showAsAction="always"
         android:icon="@drawable/logo"

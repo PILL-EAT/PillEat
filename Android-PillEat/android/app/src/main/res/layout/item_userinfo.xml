@@ -77,7 +77,6 @@
         app:layout_constraintTop_toBottomOf="@id/user_info_time_lo"
         app:layout_constraintStart_toStartOf="@id/user_info_time_lo">
         <TextView
-            android:id="@+id/user_info_birth_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
@@ -87,7 +86,7 @@
             android:fontFamily="@font/main_font"
             android:text="* 생년월일: "/>
         <TextView
-            android:id="@+id/user_info_volumn_tv"
+            android:id="@+id/user_info_birth_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1997년 1월 1일"

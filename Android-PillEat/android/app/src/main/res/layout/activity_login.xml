@@ -39,6 +39,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/main_edittext"
         android:hint="비밀번호"
+        android:inputType="textPassword"
         android:drawableLeft="@drawable/logo"
         android:drawablePadding="10dp"
         android:textColor="@color/black"

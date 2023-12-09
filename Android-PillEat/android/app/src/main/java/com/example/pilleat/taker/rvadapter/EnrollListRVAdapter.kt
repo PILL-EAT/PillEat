@@ -2,22 +2,21 @@ package com.example.pilleat.taker.rvadapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pilleat.databinding.ItemEnrollBinding
-import com.example.pilleat.taker.table.EnrollPill
+import com.example.pilleat.taker.response.EnrollPillListResponse
+import com.example.pilleat.taker.response.PillList
 
-class EnrollListRVAdapter(private var drugList: ArrayList<EnrollPill>) : RecyclerView.Adapter<EnrollListRVAdapter.ViewHolder>() {
+class EnrollListRVAdapter(var result: EnrollPillListResponse) : RecyclerView.Adapter<EnrollListRVAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: ItemEnrollBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(drug: EnrollPill) {
-            binding.enrollNameTv.text = drug.pill_name
-            binding.enrollCategoryTv.text = drug.pill_category
-            binding.enrollTimeTv.text = drug.pill_time
-            binding.enrollVolumnTv.text = drug.pill_volumn
-        }
+        val pill_name: TextView = binding.enrollNameTv
+        val pill_category: TextView = binding.enrollCategoryTv
+        val pill_date: TextView = binding.enrollDateTv
     }
 
     interface MyItemClickListener {
-        fun onItemClick(drug: EnrollPill)
+        fun onItemRemove(item: PillList)
     }
 
     private lateinit var mItemClickListener: MyItemClickListener
@@ -31,10 +30,12 @@ class EnrollListRVAdapter(private var drugList: ArrayList<EnrollPill>) : Recycle
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = drugList.size
+    override fun getItemCount(): Int = result.result.drugs.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(drugList[position])
-        holder.binding.enrollItemLo.setOnClickListener { mItemClickListener.onItemClick(drugList[position]) }
+        holder.pill_name.text = result.result.drugs[position].name
+        holder.pill_category.text = result.result.drugs[position].category
+        holder.pill_date.text = result.result.drugs[position].date.toString()
+        holder.binding.enrollRemoveBtn.setOnClickListener { mItemClickListener.onItemRemove(result.result.drugs[position]) }
     }
 }

@@ -3,10 +3,6 @@ package com.example.pilleat.all.response
 import com.google.gson.annotations.SerializedName
 
 data class AllPillInfoResponse(
-    @SerializedName("response") val response: Response
-)
-
-data class Response(
     @SerializedName("header") val header: Header,
     @SerializedName("body") val body: Body
 )
@@ -24,11 +20,19 @@ data class Body(
 )
 
 data class ItemResult(
-    @SerializedName("item") val item: Item
+    @SerializedName("entpName") val entpName: String,
+    @SerializedName("itemName") val itemName: String,
+    @SerializedName("itemSeq") val itemSeq: String,
+    @SerializedName("efcyQesitm") val efcyQesitm: String,
+    @SerializedName("useMethodQesitm") val useMethodQesitm: String,
+    @SerializedName("atpnWarnQesitm") val atpnWarnQesitm: String,
+    @SerializedName("atpnQesitm") val atpnQesitm: String,
+    @SerializedName("intrcQesitm") val intrcQesitm: String,
+    @SerializedName("seQesitm") val seQesitm: String,
+    @SerializedName("depositMethodQesitm") val depositMethodQesitm: String,
+    @SerializedName("openDe") val openDe: String,
+    @SerializedName("updateDe") val updateDe: String,
+    @SerializedName("itemImage") val itemImage: String,
+    @SerializedName("bizrno") val bizrno: String
 )
 
-data class Item(
-    @SerializedName("ESSNTL_ITEM_NAME") val ESSNTL_ITEM_NAME: String,
-    @SerializedName("MED_EFFICACY") val MED_EFFICACY: String,
-    @SerializedName("APPOINT_DATE") val APPOINT_DATE: String
-)

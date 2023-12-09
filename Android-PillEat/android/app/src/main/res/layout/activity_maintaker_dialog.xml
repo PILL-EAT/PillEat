@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/back_green"
+    android:padding="10dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -17,7 +18,7 @@
         android:textSize="16dp"
         android:background="@drawable/main_btn"
         android:layout_marginHorizontal="30dp"
-        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintVertical_bias="0.03"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +34,7 @@
         android:textSize="16dp"
         android:background="@drawable/main_btn"
         android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toTopOf="@id/main_taker_dl_connect_btn"
         app:layout_constraintTop_toBottomOf="@id/main_taker_dl_on_btn"
         app:layout_constraintStart_toStartOf="@id/main_taker_dl_on_btn"
         app:layout_constraintEnd_toEndOf="@id/main_taker_dl_on_btn" />
@@ -59,9 +61,10 @@
         android:layout_height="wrap_content"
         android:text="페어링된 목록"
         android:textSize="20dp"
+        android:textStyle="bold"
         android:textColor="@color/black"
         android:fontFamily="@font/main_font"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="@id/main_taker_dl_connect_btn"
         app:layout_constraintTop_toBottomOf="@id/main_taker_dl_connect_btn"/>
 

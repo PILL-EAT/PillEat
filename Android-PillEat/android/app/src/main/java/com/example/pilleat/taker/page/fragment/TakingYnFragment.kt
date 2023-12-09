@@ -22,6 +22,7 @@ class TakingYnFragment: Fragment() {
     ): View? {
         binding = FragmentTakingynBinding.inflate(inflater, container, false)
         updateDate()
+        doTaking()
 
         binding.takingynBeforeBtn.setOnClickListener {
             // 어제 날짜로 이동
@@ -35,15 +36,6 @@ class TakingYnFragment: Fragment() {
             updateDate()
         }
 
-        // 보호자 계정으로 로그인 시, 클릭 X
-        binding.takingynNoBtn.setOnClickListener {
-            doTaking()
-        }
-
-        binding.takingynYesBtn.setOnClickListener {
-            doTaking()
-        }
-
         return binding.root
     }
 
@@ -54,12 +46,76 @@ class TakingYnFragment: Fragment() {
 
     private fun doTaking() {
         // 복용완료 api 불러와서 연결하기
-        if(binding.takingynNoBtn.visibility == View.VISIBLE) {
+        binding.takingynNoBtn.setOnClickListener {
             binding.takingynNoBtn.visibility = View.GONE
             binding.takingynYesBtn.visibility = View.VISIBLE
-        } else {
+        }
+        binding.takingynYesBtn.setOnClickListener {
             binding.takingynNoBtn.visibility = View.VISIBLE
             binding.takingynYesBtn.visibility = View.GONE
+        }
+
+        binding.takingynNo2Btn.setOnClickListener {
+            binding.takingynNo2Btn.visibility = View.GONE
+            binding.takingynYes2Btn.visibility = View.VISIBLE
+        }
+        binding.takingynYes2Btn.setOnClickListener {
+            binding.takingynNo2Btn.visibility = View.VISIBLE
+            binding.takingynYes2Btn.visibility = View.GONE
+        }
+
+        binding.takingynNo3Btn.setOnClickListener {
+            binding.takingynNo3Btn.visibility = View.GONE
+            binding.takingynYes3Btn.visibility = View.VISIBLE
+        }
+        binding.takingynYes3Btn.setOnClickListener {
+            binding.takingynNo3Btn.visibility = View.VISIBLE
+            binding.takingynYes3Btn.visibility = View.GONE
+        }
+
+        binding.takingynNo4Btn.setOnClickListener {
+            binding.takingynNo4Btn.visibility = View.GONE
+            binding.takingynYes4Btn.visibility = View.VISIBLE
+        }
+        binding.takingynYes4Btn.setOnClickListener {
+            binding.takingynNo4Btn.visibility = View.VISIBLE
+            binding.takingynYes4Btn.visibility = View.GONE
+        }
+
+        binding.takingynNo5Btn.setOnClickListener {
+            binding.takingynNo5Btn.visibility = View.GONE
+            binding.takingynYes5Btn.visibility = View.VISIBLE
+        }
+        binding.takingynYes5Btn.setOnClickListener {
+            binding.takingynNo5Btn.visibility = View.VISIBLE
+            binding.takingynYes5Btn.visibility = View.GONE
+        }
+
+        binding.takingynNo6Btn.setOnClickListener {
+            binding.takingynNo6Btn.visibility = View.GONE
+            binding.takingynYes6Btn.visibility = View.VISIBLE
+        }
+        binding.takingynYes6Btn.setOnClickListener {
+            binding.takingynNo6Btn.visibility = View.VISIBLE
+            binding.takingynYes6Btn.visibility = View.GONE
+        }
+
+        binding.takingynNo7Btn.setOnClickListener {
+            binding.takingynNo7Btn.visibility = View.GONE
+            binding.takingynYes7Btn.visibility = View.VISIBLE
+        }
+        binding.takingynYes7Btn.setOnClickListener {
+            binding.takingynNo7Btn.visibility = View.VISIBLE
+            binding.takingynYes7Btn.visibility = View.GONE
+        }
+
+        binding.takingynNo8Btn.setOnClickListener {
+            binding.takingynNo8Btn.visibility = View.GONE
+            binding.takingynYes8Btn.visibility = View.VISIBLE
+        }
+        binding.takingynYes8Btn.setOnClickListener {
+            binding.takingynNo8Btn.visibility = View.VISIBLE
+            binding.takingynYes8Btn.visibility = View.GONE
         }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.pilleat.all.page.activity.SearchPage
 import com.example.pilleat.all.page.activity.SettingPage
 import com.example.pilleat.databinding.ActivityMaintakerBinding
 import com.example.pilleat.taker.page.dialog.BluetoothDialog
@@ -32,6 +33,11 @@ class MainTakerPage: AppCompatActivity() {
 
         binding.mainTakerEnrollBtn.setOnClickListener {
             val intent = Intent(this@MainTakerPage, EnrollPillPage::class.java)
+            startActivity(intent)
+        }
+
+        binding.mainTakerSearchBtn.setOnClickListener {
+            val intent = Intent(this@MainTakerPage, SearchPage::class.java)
             startActivity(intent)
         }
 

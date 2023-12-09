@@ -10,7 +10,7 @@ data class UserInfoResponse(
 )
 
 data class Users(
-    @SerializedName("users") val users: ArrayList<UserInfo>
+    @SerializedName("users") var users: ArrayList<UserInfo>
 )
 
 data class UserInfo (

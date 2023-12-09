@@ -8,13 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.Build
-import android.os.Bundle
 import android.os.IBinder
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import com.example.pilleat.R
-import com.example.pilleat.taker.page.fragment.SearchFragment
-import com.example.pilleat.taker.page.fragment.TakingYnFragment
 
 class ForeGround: Service() {
     private val CHANNEL_ID = "PILLEAT23"

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/back_green"/>
+    <corners android:radius="20dp" /> <!-- 테두리를 둥글게 하는 정도를 지정 -->
+</shape>

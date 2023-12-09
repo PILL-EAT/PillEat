@@ -3,8 +3,9 @@ package com.example.pilleat.manager.page.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pilleat.databinding.ActivityUserinfoBinding
-import com.example.pilleat.manager.response.Users
+import com.example.pilleat.manager.response.UserInfo
 import com.example.pilleat.manager.rvadapter.UserInfoRVAdapter
 import com.example.pilleat.manager.service.UserInfoService
 import com.example.pilleat.manager.view.UserInfoView
@@ -24,9 +25,11 @@ class UserInfoPage: AppCompatActivity(), UserInfoView {
         getUserInfo()
     }
 
-    private fun initRecyclerView(result: Users) {
-        userInfoRVAdapter = UserInfoRVAdapter(this@UserInfoPage, result)
+    private fun initRecyclerView() {
+        userInfoRVAdapter = UserInfoRVAdapter()
         binding.userInfoRv.adapter = userInfoRVAdapter
+        binding.userInfoRv.setHasFixedSize(true)
+        binding.userInfoRv.layoutManager = LinearLayoutManager(this@UserInfoPage, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun getUserInfo() {
@@ -37,8 +40,9 @@ class UserInfoPage: AppCompatActivity(), UserInfoView {
         userInfoService.getUserInfo()
     }
 
-    override fun onGetUserInfoSuccess(code: Int, result: Users) {
-        initRecyclerView(result)
+    override fun onGetUserInfoSuccess(code: Int, result: ArrayList<UserInfo>) {
+        initRecyclerView()
+        userInfoRVAdapter.setData(result)
     }
 
     override fun onGetUserInfoFailure(code: Int, message: String) {

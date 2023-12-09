@@ -10,7 +10,7 @@ interface AllPillInfoRetrofitInterface {
         private const val authKey = "+YTZbdAw6Wm3deZyU/59WCuZD+pTuzjQkNkU9hEafCiXW7KX5j77A3p8U+zoKSI568aesezu2wp/BinOckcRvA=="
     }
 
-    @GET("getMdcEssntlItemList03")
+    @GET("getDrbEasyDrugList")
     fun getData(
         @Query("serviceKey")
         serviceKey: String = authKey,
@@ -20,7 +20,7 @@ interface AllPillInfoRetrofitInterface {
         numOfRows: Int = 10,
         @Query("type")
         type: String = "json",
-        @Query("essntl_item_name")
-        essntl_item_name: String = "요오드"
+        @Query("itemName")
+        itemName: String = ""
     ): Call<AllPillInfoResponse>
 }

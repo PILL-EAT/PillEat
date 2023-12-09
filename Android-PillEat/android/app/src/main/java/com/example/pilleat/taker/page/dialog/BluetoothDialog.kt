@@ -227,8 +227,6 @@ class BluetoothDialog(private val activity: AppCompatActivity) : Dialog(activity
                 BLUETOOTH_PERMISSION_REQUEST_CODE
             )
         }
-        val listView = binding.mainTakerDlConnectLv
-
     }
 
     companion object {

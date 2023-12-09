@@ -1,9 +1,7 @@
 package com.example.pilleat.taker.service
 
 import android.util.Log
-import com.example.pilleat.all.table.User
 import com.example.pilleat.getRetrofit
-import com.example.pilleat.manager.response.Users
 import com.example.pilleat.taker.response.EnrollPillResponse
 import com.example.pilleat.taker.retrofit_interface.TakerRetrofitInterface
 import com.example.pilleat.taker.table.EnrollPill
@@ -19,9 +17,9 @@ class EnrollPillService {
         this.enrollPillView = enrollPillView
     }
 
-    fun enrollPill(enrollPill: EnrollPill) {
+    fun enrollPill(enrollPill: EnrollPill, userId: Int) {
         val enrollPillService = getRetrofit().create(TakerRetrofitInterface::class.java)
-        enrollPillService.enrollPill(enrollPill).enqueue(object : Callback<EnrollPillResponse> {
+        enrollPillService.enrollPill(enrollPill, userId).enqueue(object : Callback<EnrollPillResponse> {
             override fun onResponse(call: Call<EnrollPillResponse>, response: Response<EnrollPillResponse>) {
                 val resp: EnrollPillResponse = response.body()!!
                 when(resp.code) {
@@ -33,7 +31,6 @@ class EnrollPillService {
             override fun onFailure(call: Call<EnrollPillResponse>, t: Throwable) {
                 Log.d("ENROLL_PILL_FAILURE", t.message!!)
             }
-
         })
     }
 }

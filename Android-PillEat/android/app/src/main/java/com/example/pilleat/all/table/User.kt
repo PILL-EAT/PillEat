@@ -1,17 +1,17 @@
 package com.example.pilleat.all.table
 
-import androidx.room.*
-import com.google.gson.annotations.SerializedName
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity(tableName = "User")
 data class User(
-    @SerializedName("email") val email: String,
-    @SerializedName("password") val password: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("birth") val birth: String,
-    @SerializedName("phone") val phone: String,
-    @SerializedName("date") val date: String,
-    @SerializedName("mode") val mode: String
-) {
+    val email: String,
+    val password: String,
+    val name: String,
+    val birth: String,
+    val phone: String,
+    val mode: String,
+    val join_date: String
+){
     @PrimaryKey(autoGenerate = true) val id: Int = 0
 }

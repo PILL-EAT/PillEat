@@ -2,7 +2,7 @@ package com.example.pilleat.all.response
 
 import com.google.gson.annotations.SerializedName
 
-data class AuthResponse(
+data class LoginResponse(
     @SerializedName("isSuccess") val isSuccess: Boolean,
     @SerializedName("code") val code: Int,
     @SerializedName("message") val message: String,
@@ -10,6 +10,5 @@ data class AuthResponse(
 )
 
 data class Result(
-    @SerializedName("userId") val userId: Int,
-    @SerializedName("jwt") val jwt: String
+    @SerializedName("userId") val userId: Int
 )

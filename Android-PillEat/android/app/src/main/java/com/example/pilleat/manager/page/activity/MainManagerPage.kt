@@ -23,11 +23,6 @@ class MainManagerPage: AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.mainManagerAddPillBtn.setOnClickListener {
-            val intent = Intent(this@MainManagerPage, AddPillPage::class.java)
-            startActivity(intent)
-        }
-
         binding.mainManagerLogoutBtn.setOnClickListener {
             logout()
         }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialog_enroll_taker_lo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/dialog_enroll_taker_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="복용자 전화번호를 입력해주세요."
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:fontFamily="@font/main_font"
+        android:gravity="center_horizontal"
+        android:paddingVertical="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <EditText
+        android:id="@+id/dialog_enroll_taker_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_edittext"
+        android:hint="예) 010-1234-5678"
+        android:paddingStart="10dp"
+        android:layout_marginHorizontal="5dp"
+        app:layout_constraintTop_toBottomOf="@id/dialog_enroll_taker_tv"
+        app:layout_constraintStart_toStartOf="@id/dialog_enroll_taker_tv"
+        app:layout_constraintEnd_toEndOf="@id/dialog_enroll_taker_tv"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
