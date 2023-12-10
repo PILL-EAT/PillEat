@@ -3,10 +3,16 @@
 
 const express = require('express');
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const io = require('socket.io')(server);
 const port = 60013;
+const schedule = require('node-schedule');
 const bodyParser = require('body-parser');
 
-var db = require('./lib/db');///
+var db = require('./lib/db');
+const socketEvents = require('./lib/socketEvents');
+socketEvents(io);
 
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }));
@@ -16,27 +22,73 @@ var userRouter = require('./router/userRouter');
 var takerRouter = require('./router/takerRouter');
 var protectorRouter = require('./router/protectorRouter');
 var managerRouter = require('./router/managerRouter');
-var drugRouter = require('./router/drugRouter');
 
+// 스케줄러 설정 (밤 12시마다 pill_history 테이블 update )
+const Schedule = schedule.scheduleJob('0 0 * * *', () => {
+    var currentDate = new Date();
+    var dayOfWeek = currentDate.getDay(); // 일요일(0) ~ 토요일(6)까지의 숫자 반환
+
+    // 기존의 getDay() 반환값을 월요일부터 1로 시작해서 일요일을 7로 조정
+    dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
+    
+        var date = currentDate.toISOString().split('T')[0];
+            db.query(`INSERT INTO pill_history (date, pill_alert_id, is_taken)
+            SELECT '${date}' as date, pill_alert_id, false as is_taken
+            FROM pill_alert
+            WHERE SUBSTRING(alert_day, '${dayOfWeek}', 1) = '1';`,
+            (err,result)=>{
+                if (err){
+                    throw(err)
+                }
+                console.log("pill_history UPDATE")
+                db.query('select * from pill_history',(err,result)=>{
+                    console.log(result)
+                })
+            })
+        })
+
+// 서버 작동 확인용
 app.get('/', (req, res) => {
     console.log()
     res.send('your server is on');
 });
 
-db.query('select * from user',(err,result)=>{
-    console.log(result)
-})
-
 
 app.use('/user', userRouter);
 app.use('/taker', takerRouter);
 app.use('/protector', protectorRouter);
-app.use('/drug', drugRouter);
 app.use('/manager', managerRouter);
 
 
 
-app.listen(port,'0.0.0.0', () => {
+
+server.listen(port,'0.0.0.0', () => {
+    // 서버가 실행될 때 pill_history 테이블에 현재 날짜의 알림 데이터 등록
+    var currentDate = new Date();
+    var dayOfWeek = currentDate.getDay(); // 일요일(0) ~ 토요일(6)까지의 숫자 반환
+
+    // 기존의 getDay() 반환값을 월요일부터 1로 시작해서 일요일을 7로 조정
+    dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
+    
+        var date = currentDate.toISOString().split('T')[0];
+        db.query(`DELETE FROM pill_history WHERE date = ?`,[date], (err, result)=>{
+            if (err){
+                throw(err)
+            }
+            db.query(`INSERT INTO pill_history (date, pill_alert_id, is_taken)
+            SELECT '${date}' as date, pill_alert_id, false as is_taken
+            FROM pill_alert
+            WHERE SUBSTRING(alert_day, '${dayOfWeek}', 1) = '1';`,
+            (err,result)=>{
+                if (err){
+                    throw(err)
+                }
+                console.log("pill_history UPDATE")
+                db.query('select * from pill_history',(err,result)=>{
+                    console.log(result)
+                })
+            })
+        })
     console.log(`Server is running at http://ceprj.gachon.ac.kr:${port}`);
 });
 

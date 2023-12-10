@@ -1,25 +1,10 @@
 var db = require('./db');
 
-module.exports = {
-    // 서버 작동 확인용
-    test: (req, res) => {
-        console.log("YOUR SERVER IS ON")
-        db.query('SELECT * FROM taker', (err, result) => {
-            if (err) {
-                throw err;
-            }
-            const responseData = {
-                buttonText: result[0].taker_email,
-                name: result[0].taker_password
-            }
-            res.json(responseData);
-        });
-    },
-    
+module.exports = {  
     // 로그인
     login: (req, res) => {
         var loginData = req.body;
-        console.log('Received data:', loginData);
+        console.log('user login:', loginData);
     
         // user 테이블에서 로그인 확인
         db.query('SELECT * FROM user WHERE user_email = ? AND user_password = ?',
@@ -48,15 +33,25 @@ module.exports = {
                             type: result[0].user_type  // user_type에 따라 "taker" or "protector" or "manager"
                         }
                     };
+
+                    var userId = result[0].user_id;
+
                     res.json(responseData);
                 }
             });
     },
-    
 
-    // 로그아웃 기능
-    logout: (req, res) => {
-        // 논의 예정
+    logout: (req,res) => {
+        var userId = req.params.userId;
+        clients.delete(userId);
+
+        const responseData = {
+            isSuccess: true,
+            code: 1000,
+            message: "요청에 성공하였습니다.",
+        }
+
+        res.json(responseData);
     },
 
     // 회원가입 기능
@@ -120,11 +115,6 @@ module.exports = {
         });
     },
 
-    // 자동 로그인
-    autoLogin:(req,res)=>{
-        // 논의 예정
-    },
-
     // 내 정보 보기
     userInfo:(req,res)=>{
         const userId = req.params.userId;
@@ -181,6 +171,8 @@ module.exports = {
                 }
             }
         );
-    }    
+    },
+    
+    
 
 }
