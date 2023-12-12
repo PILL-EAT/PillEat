@@ -5,14 +5,14 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const io = require('socket.io')(server);
 const port = 60013;
 const schedule = require('node-schedule');
 const bodyParser = require('body-parser');
 
 var db = require('./lib/db');
 const socketEvents = require('./lib/socketEvents');
-socketEvents(io);
+socketEvents(server);
+
 
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }));
@@ -27,6 +27,15 @@ var managerRouter = require('./router/managerRouter');
 const Schedule = schedule.scheduleJob('0 0 * * *', () => {
     var currentDate = new Date();
     var dayOfWeek = currentDate.getDay(); // 일요일(0) ~ 토요일(6)까지의 숫자 반환
+
+    // 기존의 getDay() 반환값을 월요일부터 1로 시작해서 일요일을 7로 조정
+    dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
+
+    var year = currentDate.getFullYear();
+    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 1을 더하고 두 자리로 표시
+    var day = ('0' + currentDate.getDate()).slice(-2); // 일도 두 자리로 표시
+
+    var date = `${year}-${month}-${day}`;
 
     // 기존의 getDay() 반환값을 월요일부터 1로 시작해서 일요일을 7로 조정
     dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
@@ -70,7 +79,12 @@ server.listen(port,'0.0.0.0', () => {
     // 기존의 getDay() 반환값을 월요일부터 1로 시작해서 일요일을 7로 조정
     dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
     
-        var date = currentDate.toISOString().split('T')[0];
+    var year = currentDate.getFullYear();
+    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 1을 더하고 두 자리로 표시
+    var day = ('0' + currentDate.getDate()).slice(-2); // 일도 두 자리로 표시
+
+    var date = `${year}-${month}-${day}`;
+        
         db.query(`DELETE FROM pill_history WHERE date = ?`,[date], (err, result)=>{
             if (err){
                 throw(err)
@@ -83,10 +97,6 @@ server.listen(port,'0.0.0.0', () => {
                 if (err){
                     throw(err)
                 }
-                console.log("pill_history UPDATE")
-                db.query('select * from pill_history',(err,result)=>{
-                    console.log(result)
-                })
             })
         })
     console.log(`Server is running at http://ceprj.gachon.ac.kr:${port}`);

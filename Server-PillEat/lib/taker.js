@@ -1,42 +1,76 @@
 const { socket } = require('server/router');
 var db = require('./db');
 
+// 삽입 오류 처리를 위한 함수
+
+
 module.exports = {
     //복용할 약 등록
-    enroll: (req, res) => {
-        var takerId = req.params.takerId;
-        var enrollData = req.body;
-
-        console.log(`takerId: ${takerId}, enroll: ${enrollData}`);
+    enroll: async (req, res) => {
+        try {
+            const takerId = req.params.userId;
+            const enrollData = req.body;
     
-        db.query('INSERT INTO Pill_Alert (taker_id, pill_name, pill_kind, alert_time, alert_day) VALUES(?,?,?,?,?)', 
-            [takerId, enrollData.name, enrollData.category, enrollData.time, enrollData.day], (err, result) => {
-            if (err) {
-                console.log(err)
-                const responseData = {
-                    isSuccess: False,
-                    code: 600,
-                    message: "요청에 실패하였습니다.",
-                };
-                return res.json(responseData);
-            }else{
-                const responseData = {
-                    isSuccess: true,
-                    code: 200,
-                    message: "요청에 성공하였습니다.",
-                };
-                res.json(responseData);
-            } 
-        });
+            console.log(`takerId: ${takerId}, enroll: ${JSON.stringify(enrollData)}`);
+            console.log(enrollData.date);
+    
+            const times = enrollData.time[0];
+            const queryPromises = [];
+    
+            for (let i = 0; i < enrollData.date; i++) {
+                console.log(times['time' + (i + 1)]);
+    
+                // 각 쿼리를 Promise로 감싸고 배열에 추가
+                const queryPromise = new Promise((resolve, reject) => {
+                    db.query(
+                        'INSERT INTO pill_alert (taker_id, pill_name, pill_kind, alert_time, alert_day) VALUES(?,?,?,?,?)',
+                        [takerId, enrollData.name, enrollData.category, times['time' + (i + 1)], enrollData.day],
+                        (err, result) => {
+                            if (err) {
+                                const errorResponse = {
+                                    isSuccess: false,
+                                    code: 600,
+                                    message: "요청에 실패하였습니다.",
+                                };
+                                reject(errorResponse);
+                            } else {
+                                resolve(result);
+                            }
+                        }
+                    );
+                });
+    
+                queryPromises.push(queryPromise);
+            }
+    
+            // 모든 Promise가 완료될 때까지 대기
+            const results = await Promise.all(queryPromises);
+    
+            const responseData = {
+                isSuccess: true,
+                code: 200,
+                message: "요청에 성공하였습니다.",
+            };
+            res.json(responseData);
+           
+        } catch (error) {
+            console.error(error);
+            const errorResponse = {
+                isSuccess: false,
+                code: 600,
+                message: "요청에 실패하였습니다.",
+            };
+            res.json(errorResponse);
+        }
     },
 
     //등록한 약 목록 불러오기
-    enrollList: (req, res) =>{
-        var takerId = req.params.takerId;
-
+    enrollList: (req, res) => {
+        var takerId = req.params.userId;
+    
         console.log(`enrollList, takerId: ${takerId}`)
-
-        db.query('SELECT * FROM pill_alert WHERE pill_user_id = ?', [takerId], (err, result) => {
+    
+        db.query('SELECT * FROM pill_alert WHERE taker_id = ?', [takerId], (err, result) => {
             if (err) {
                 console.log(err)
                 const responseData = {
@@ -46,40 +80,44 @@ module.exports = {
                     result: null
                 };
                 return res.json(responseData);
-            }else{
-                const drugs= result.map(result => ({
-                    drugId: result.pill_alert_id,
-                    name: result.pill_name,
-                    category: result.pill_category,
-                    time: result.pill_time,
-                    day: result.pill_day
-                  }));
+            } else {
+                if (result.length === 0) {
+                    // 데이터가 없는 경우
+                    const responseData = {
+                        isSuccess: true,
+                        code: 404,
+                        message: "데이터가 없습니다.",
+                        result: {
+                            drugs: []
+                        }
+                    };
+                    return res.json(responseData);
+                }
+                const drugs = result.map(resultItem => ({
+                    drugId: resultItem.pill_alert_id,
+                    name: resultItem.pill_name,
+                    category: resultItem.pill_kind,
+                    time: resultItem.alert_time,
+                    day: resultItem.alert_day
+                }));
+    
                 const responseData = {
                     isSuccess: true,
                     code: 200,
                     message: "요청에 성공하였습니다.",
                     result: {
                         drugs: drugs
-                      }
+                    }
                 };
                 res.json(responseData);
-            } 
+            }
         });
     },
+    
 
     //복용 완료 요청
     finish: (req,res,io) => {
-        io.on('connection', (socket) => {
-            console.log(`클라이언트가 연결되었습니다.`);
-            
-            // 클라이언트로부터 메시지 수신 예제
-            socket.on('clientMessage', (message) => {
-              console.log(`클라이언트로부터 수신한 메시지: ${message}`);
-            });
-          
-            // 클라이언트에게 메시지 전송 예제
-            socket.emit('serverMessage', '서버에서 보낸 메시지');
-          });
+       
     },
 
     //등록한 약 삭제 요청
@@ -111,9 +149,9 @@ module.exports = {
     // 복용 완료 여부 리스트 불러오기
     record:(req,res)=>{
         var takerId = req.params.takerId;
-        var date = req.parmas.date;
+        var date = req.params.date;
 
-        console.log("drug-list")
+        console.log(`drug-list takerId = ${takerId}, date = ${date}`)
 
         db.query(`SELECT *
                 FROM pill_history
@@ -147,10 +185,4 @@ module.exports = {
             } 
         });
     },
-
-    dd:(req,res,io)=>{
-        
-        
-    }
- 
 }

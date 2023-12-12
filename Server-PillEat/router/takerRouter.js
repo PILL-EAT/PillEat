@@ -5,17 +5,17 @@ var taker = require('../lib/taker');
 
 
 // 등록한 약 목록 불러오기 (완성)
-router.get('/drug/enroll-list', (req, res) => {
+router.get('/drug/enroll-list/:userId', (req, res) => {
     taker.enrollList(req, res);
 });
 
 // 복용할 약 등록 (완성)
-router.post('/drug/enroll', (req, res) => {
+router.post('/drug/enroll/:userId', (req, res) => {
     taker.enroll(req, res);
 });
 
 // 복용 완료 요청(논의 예정)
-router.post('/drug/enroll', (req, res) => {
+router.post('/drug/enroll/:userId', (req, res) => {
     taker.finish(req,res);
 });
 
@@ -25,7 +25,7 @@ router.delete('/drug/enroll-delete/:drugId', (req, res) => {
 });
 
 // 복용 완료 여부 리스트 불러오기 (완성)
-router.get('/record/:userId/:date', (req, res) => {
+router.get('/record/:takerId/:date', (req, res) => {
     taker.record(req,res);
 });
 
