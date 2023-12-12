@@ -24,7 +24,7 @@ router.post('/join', (req, res) => {
 });
 
 // 회원탈퇴 (완성)
-router.delete('/userDelete/:userId', (req, res) => {
+router.delete('/user-delete/:userId', (req, res) => {
     user.delete(req, res);
 });
 

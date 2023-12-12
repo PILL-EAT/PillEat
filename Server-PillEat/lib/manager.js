@@ -44,29 +44,5 @@ module.exports = {
             console.log(JSON.stringify(result, null, 2));
             res.json(responseData);
         });
-    },
-
-    // 검색 약 추가
-    addDrug: (req, res) => {
-        var drugData = req.body;
-
-        db.query('INSERT INTO pill_alert (pill_name, pill_use) VALUES (?, ?);', [drugData.name, drugData.use], (err, result) => {
-            if (err) {
-                console.log(err);
-                const responseData = {
-                    isSuccess: false,
-                    code: 600,
-                    message: "요청에 실패하였습니다.",
-                };
-                return res.json(responseData);
-            }
-
-            const responseData = {
-                isSuccess: true,
-                code: 200,
-                message: "요청에 성공하였습니다.",
-            };
-            res.json(responseData);
-        });
     }
 };

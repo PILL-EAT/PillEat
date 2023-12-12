@@ -4,14 +4,13 @@ module.exports = {
     // 로그인
     login: (req, res) => {
         var loginData = req.body;
-        console.log('user login:', loginData);
+        console.log('userLogin:', loginData);
     
         // user 테이블에서 로그인 확인
         db.query('SELECT * FROM user WHERE user_email = ? AND user_password = ?',
             [loginData.email, loginData.password], (err, result) => {
                 if (err) {
                     // 로그인 실패
-                    console.error(err);
                     const responseData = {
                         isSuccess: false,
                         code: 0,
@@ -22,7 +21,19 @@ module.exports = {
                         }
                     };
                     res.json(responseData);
-                }else{
+                } else if (result.length === 0) {
+                    // 로그인 실패: 일치하는 항목이 없음
+                    const responseData = {
+                        isSuccess: false,
+                        code: 0,
+                        message: "일치하는 사용자가 없습니다. 로그인에 실패하였습니다.",
+                        result: {
+                            userId: null,
+                            type: null
+                        }
+                    };
+                    res.json(responseData);
+                } else {
                     // 로그인 성공
                     const responseData = {
                         isSuccess: true,
@@ -33,13 +44,11 @@ module.exports = {
                             type: result[0].user_type  // user_type에 따라 "taker" or "protector" or "manager"
                         }
                     };
-
-                    var userId = result[0].user_id;
-
                     res.json(responseData);
                 }
             });
     },
+    
 
     logout: (req,res) => {
         var userId = req.params.userId;
@@ -74,8 +83,10 @@ module.exports = {
                 res.json(responseData);
             } else {
                 // 회원 가입
-                db.query('INSERT INTO user (user_email, user_password, user_name, user_birth, user_number, user_date, user_type) VALUES (?, ?, ?, ?, ?, NOW(), ?)',
-                    [joinData.email, joinData.password, joinData.name, joinData.birth, joinData.phone, (joinData.mode === 'taker' ? 'taker' : 'protector')], (err, result) => {
+                db.query(`INSERT INTO user (user_email, user_password, user_name, user_birth, user_number, user_date, user_type)
+                     VALUES (?, ?, ?, ?, ?, NOW(), ?)`,
+                    [joinData.email, joinData.password, joinData.name, joinData.birth, joinData.phone, 
+                        (joinData.mode === 'taker' ? 'taker' : 'protector')], (err, result) => {
                         if (err) {
                             throw err;
                         }
@@ -94,6 +105,8 @@ module.exports = {
     // 회원 탈퇴
     delete: (req, res) => {
         const userId = req.params.userId;
+        
+        console.log("userDelete " + userId)
     
         // user 테이블에서 삭제
         db.query(`DELETE FROM user WHERE user_id = ?`, [userId], (err, result) => {
@@ -118,7 +131,8 @@ module.exports = {
     // 내 정보 보기
     userInfo:(req,res)=>{
         const userId = req.params.userId;
-        db.query('select * from user where = ?',[userId], (err,result)=>{
+        console.log("userInfo " + userId)
+        db.query('select * from user where user_id = ?',[userId], (err,result)=>{
             if(err){
                 const responseData = {
                     isSuccess: false,
@@ -129,7 +143,7 @@ module.exports = {
                 res.json(responseData);
             }else{ 
                 const responseData = {
-                    isSuccess: false,
+                    isSuccess: true,
                     code: 200,
                     message: "요청에 성공하였습니다.",
                     result: {
@@ -137,9 +151,12 @@ module.exports = {
                         password: result[0].user_password,
                         name: result[0].user_name,
                         birth: result[0].user_birth,
-                        phone: result[0].user_phone,
+                        phone: result[0].user_number,
+                        join_date: result[0].user_date,
                         mode: result[0].user_type
+                        
                     }
+                    
                 };
                 res.json(responseData);
             }
@@ -151,6 +168,7 @@ module.exports = {
         const userId = req.params.userId;
         var updateData = req.body;
     
+        console.log("userUpdate " + userId)
         db.query(
             'UPDATE user SET user_name = ?, user_birth = ?, user_phone = ? WHERE user_Id = ?',
             [updateData.name, updateData.birth, updateData.phone, userId],(err, result) => {
