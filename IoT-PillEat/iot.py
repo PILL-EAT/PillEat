@@ -51,9 +51,9 @@ def measure_distance():
         pass
         
 while True:
-    timeToEatingPill = False # 추후에 블루투스로 앱에서 받아올 예정
+    timeToEatingPill = 0 # 추후에 블루투스로 앱에서 받아올 예정
     
-    if(timeToEatingPill == True): # 약 먹을 시간 되면 앱에서 신호 받아서
+    if(timeToEatingPill == 1): # 약 먹을 시간 되면 앱에서 신호 받아서
         # 약봉지 하나가 나오는만큼 모터를 돌려 내보내기 
         while True:
             distance = measure_distance()
@@ -63,7 +63,7 @@ while True:
                 motor.stop()
                 break
 
-        timeToEatingPill = False # 약 봉지 내보내고 나면 다시 False
+        timeToEatingPill = 0 # 약 봉지 내보내고 나면 다시 0
         ledOn_Thread.start()
         buzzerOn_Thread.start()
         # 초음파로 약 없어진거 감지하면 센서 멈출 예정
@@ -93,6 +93,17 @@ while True:
                  break
     
     # 약을 외출 시 미리 꺼내는 경우
+    if timeToEatingPill == 2:
+        # 약봉지 하나가 나오는만큼 모터를 돌려 내보내기 
+        while True:
+            distance = measure_distance()
+            motor = Robot(left=(20, 21), right=(19, 26))
+            motor.forward(speed = 1)  # 이건 속도 (0~1) 사이의 값으로 설정
+            if distance == 1: # 초음파 센서를 이용하여 측정할 예정이며 약통이 정확히 만들어지면 거리 제대로 측정하여 수정
+                motor.stop()
+                print("약 내보내기 완료")
+                break
+        
                  
          
          
