@@ -2,21 +2,21 @@ package com.example.pilleat.taker.response
 
 import com.google.gson.annotations.SerializedName
 
-data class EnrollPillListResponse(
+data class EnrollRecordResponse(
     @SerializedName("isSuccess") val isSuccess: Boolean,
     @SerializedName("code") val code: Int,
     @SerializedName("message") val message: String,
-    @SerializedName("result") val result: Drugs
+    @SerializedName("result") val result: Records
 )
 
-data class Drugs(
-    @SerializedName("drugs") val drugs: ArrayList<PillList>
+data class Records(
+    @SerializedName("list") var list: ArrayList<RecordResult>
 )
 
-data class PillList(
+data class RecordResult(
+    @SerializedName("userId") val userId: Int,
     @SerializedName("drugId") val drugId: Int,
     @SerializedName("name") val name: String,
-    @SerializedName("category") val category: String,
     @SerializedName("time") val time: String,
-    @SerializedName("day") val day: String
+    @SerializedName("finishYN") var finishYN: Int
 )

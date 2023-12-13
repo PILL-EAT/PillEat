@@ -19,15 +19,11 @@ import retrofit2.Response
 
 class SettingPage: AppCompatActivity(), UserDeleteView {
     private lateinit var binding: ActivitySettingBinding
-    private lateinit var userResult: UserResult
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        userResult = getUserData()!!
-        deleteUserInfo(userResult.id)
 
         binding.settingUpdateBtn.setOnClickListener {
             update()
@@ -35,29 +31,23 @@ class SettingPage: AppCompatActivity(), UserDeleteView {
 
         binding.settingLogoutBtn.setOnClickListener {
             logout()
-            logoutMethod()
         }
 
         binding.settingDeleteBtn.setOnClickListener {
-            delete()
-            deleteMethod()
+            deleteUserInfo(getData())
         }
     }
 
-    private fun getUserData(): UserResult? {
-        val spf = getSharedPreferences("userData", MODE_PRIVATE)
-        val userJson = spf.getString("userData", null)
-
-        return if (userJson != null) {
-            val gson = Gson()
-            gson.fromJson(userJson, UserResult::class.java)
-        } else {
-            null
-        }
+    private fun getData(): Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("takerId", 0)
+        Log.d("ID", getData.toString())
+        return getData
     }
 
     private fun update() {
         val intent = Intent(this@SettingPage, UpdatePage::class.java)
+        intent.putExtra("userId", getData())
         startActivity(intent)
     }
 
@@ -78,14 +68,6 @@ class SettingPage: AppCompatActivity(), UserDeleteView {
         alertDialog.show()
     }
 
-    // 로그인 정보 지우기
-    private fun logoutMethod() {
-        val spf = this@SettingPage.getSharedPreferences("auth", MODE_PRIVATE)
-        val editor = spf!!.edit()
-        editor.remove("userId") // 'userId' 키에 저장된 값 삭제
-        editor.apply()
-    }
-
     private fun deleteUserInfo(userId: Int) {
         val userService = UserService()
         userService.setUserDeleteView(this@SettingPage)
@@ -93,32 +75,11 @@ class SettingPage: AppCompatActivity(), UserDeleteView {
         userService.userDelete(userId)
     }
 
-    private fun deleteMethod() {
-        val spf = this@SettingPage.getSharedPreferences("userData", MODE_PRIVATE)
-        val editor = spf!!.edit()
-        editor.remove("userData") // 'userData' 키에 저장된 값 삭제
-        editor.apply()
-    }
-
-    private fun delete() {
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view = inflater.inflate(R.layout.dialog_delete, null)
-
-        val alertDialog = AlertDialog.Builder(this@SettingPage)
-            .setPositiveButton("예") { dialog, which ->
-                // 임시 설정 -> 회원탈퇴 API 연결
-                Toast.makeText(this@SettingPage, "탈퇴되었습니다.", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this@SettingPage, StartPage::class.java)
-                startActivity(intent)
-            }
-            .setNeutralButton("아니오", null)
-            .create()
-        alertDialog.setView(view)
-        alertDialog.show()
-    }
-
     override fun onDeleteSuccess(code: Int) {
+        Toast.makeText(this@SettingPage, "탈퇴 처리되었습니다.", Toast.LENGTH_SHORT).show()
         Log.d("SettingPage-DELETE-SUCCESS", code.toString())
+        val intent = Intent(this@SettingPage, StartPage::class.java)
+        startActivity(intent)
     }
 
     override fun onDeleteFailure(response: Response<UserResponse>) {

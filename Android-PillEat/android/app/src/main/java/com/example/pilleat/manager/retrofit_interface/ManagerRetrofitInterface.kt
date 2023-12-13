@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ManagerRetrofitInterface {
-    @GET("/manager/user-list")
+    @GET("manager/user-list")
     fun getUserInfo(): Call<UserInfoResponse>
 }

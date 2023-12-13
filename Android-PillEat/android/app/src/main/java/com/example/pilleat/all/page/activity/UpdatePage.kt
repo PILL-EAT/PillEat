@@ -1,6 +1,7 @@
 package com.example.pilleat.all.page.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pilleat.all.response.UserResponse
@@ -14,52 +15,38 @@ import retrofit2.Response
 
 class UpdatePage: AppCompatActivity(), UserReadView, UserUpdateView {
     private lateinit var binding: ActivityUpdateBinding
-    private lateinit var userResult: UserResult
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdateBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userResult = getUserData()!!
-        initData(userResult)
-        readUserInfo(userResult.id)
-        updateData(userResult)
-        updateUserInfo(userResult, userResult.id)
-    }
+        readUserInfo(getUserId())
 
-    private fun initData(result: UserResult) {
-        binding.updateNameEt.setText(result.name)
-        binding.updatePwEt.setText(result.password)
-        binding.updateEmailEt.setText(result.email)
-        binding.updateBirthEt.setText(result.birth)
-        binding.updatePhoneEt.setText(result.phone)
-        binding.joinModeTv.setText(result.mode)
-
-        if(result.mode == "taker") {
-            binding.joinModeCb.isChecked = false
-        } else {
-            binding.joinModeCb.isChecked = true
+        binding.updateBtn.setOnClickListener {
+            updateUserInfo(getUserId())
         }
     }
 
-    private fun updateData(result: UserResult) {
-        result.name = binding.updateNameEt.text.toString()
-        result.email = binding.updateEmailEt.text.toString()
-        result.password = binding.updatePwEt.text.toString()
-        result.phone = binding.updatePhoneEt.text.toString()
-        result.birth = binding.updateBirthEt.text.toString()
+    private fun getUserId(): Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("userId", 0)
+        Log.d("IDIDID", getData.toString())
+        return getData
     }
 
-    private fun getUserData(): UserResult? {
-        val spf = getSharedPreferences("userData", MODE_PRIVATE)
-        val userJson = spf.getString("userData", null)
+    private fun initData(result: UserResponse) {
+        binding.updateNameEt.setText(result.result.name)
+        binding.updatePwEt.setText(result.result.password)
+        binding.updateEmailEt.setText(result.result.email)
+        binding.updateBirthEt.setText(result.result.birth)
+        binding.updatePhoneEt.setText(result.result.phone)
+        binding.joinModeTv.setText(result.result.mode)
 
-        return if (userJson != null) {
-            val gson = Gson()
-            gson.fromJson(userJson, UserResult::class.java)
+        if(result.result.mode == "taker") {
+            binding.joinModeCb.isChecked = false
         } else {
-            null
+            binding.joinModeCb.isChecked = true
         }
     }
 
@@ -70,26 +57,37 @@ class UpdatePage: AppCompatActivity(), UserReadView, UserUpdateView {
         userService.userRead(userId)
     }
 
-    private fun updateUserInfo(userResult: UserResult, userId: Int) {
+    private fun updateUserInfo(userId: Int) {
+        val name = binding.updateNameEt.text.toString()
+        val email = binding.updateEmailEt.text.toString()
+        val password = binding.updatePwEt.text.toString()
+        val phone = binding.updatePhoneEt.text.toString()
+        val birth = binding.updateBirthEt.text.toString()
+
+        val result = UserResult(email, password, name, birth, phone, "", "", getUserId())
+
+        Log.d("djfksdjfl", result.toString())
         val userService = UserService()
         userService.setUserUpdateView(this@UpdatePage)
 
-        userService.userUpdate(userResult, userId)
+        userService.userUpdate(result, userId)
     }
 
-    override fun onReadSuccess(code: Int) {
-        Toast.makeText(this@UpdatePage, "정보를 불러왔습니다.", Toast.LENGTH_SHORT).show()
+    override fun onReadSuccess(code: Int, response: UserResponse) {
+        initData(response)
+        Log.d("USER-INFO", code.toString())
     }
 
     override fun onReadFailure(response: Response<UserResponse>) {
-        Toast.makeText(this@UpdatePage, "정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+        Log.d("USER-INFO-FAIL", response.message())
     }
 
-    override fun onUpdateSuccess(code: Int) {
-        Toast.makeText(this@UpdatePage, "정보가 수정되었습니다.", Toast.LENGTH_SHORT).show()
+    override fun onUpdateSuccess(code: Int, response: UserResponse) {
+        Toast.makeText(this@UpdatePage, "정보가 수정되었습니다", Toast.LENGTH_SHORT).show()
+        Log.d("USER-INFO-UPDATE", code.toString())
     }
 
     override fun onUpdateFailure(response: Response<UserResponse>) {
-        Toast.makeText(this@UpdatePage, "정보가 수정되지 않았습니다.", Toast.LENGTH_SHORT).show()
+        Log.d("USER-INFO-UPDATE", response.message())
     }
 }
