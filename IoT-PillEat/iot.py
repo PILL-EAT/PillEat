@@ -2,13 +2,17 @@ from gpiozero import Robot
 import RPi.GPIO as GPIO
 import threading
 import time
+import serial
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(16, GPIO.OUT) #LED
 GPIO.setup(25, GPIO.OUT) #부저
-GPIO.setup(15, GPIO.IN, pull_up_down=GPIO.PID_DOWN) #버튼 눌리면 on
+GPIO.setup(5, GPIO.IN, pull_up_down=GPIO.PID_DOWN) #버튼 눌리면 on
 GPIO.setup(23, GPIO.OUT) # Trig = 23 초음파 신호 전송핀
 GPIO.setup(24, GPIO.IN)  # Echo = 24 초음파 수신하는 수신 핀
+
+BlSerial = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.0)
+# ttyS0을 시리얼 통신핀으로 사용 9600의 통신속도를 가지고, 1초이상 데이터가 들어오지않으면 timeout된다.
 
 def led_on(): #led 키는 쓰레드 생성
     try:
@@ -50,10 +54,22 @@ def measure_distance():
     finally:
         pass
         
+def serial_input():  # 시리얼 통신으로 데이터를 받기
+    r_data = ""
+    try:
+        data = BlSerial.readline() # 한줄씩 값을 받음
+        data = data.decode() # decode로 시리얼통신의 bytes 타입을 문자열 타입으로 변경
+        r_data = data  # 받은 데이터를 r_data에 대입해준다.
+        return r_data
+    finally:
+        pass
+            
+serial_Thread = threading.Thread(target = serial_input)
+
 while True:
-    timeToEatingPill = 0 # 추후에 블루투스로 앱에서 받아올 예정
+    r_data = serial_Thread() # 추후에 블루투스로 앱에서 받아올 예정
     
-    if(timeToEatingPill == 1): # 약 먹을 시간 되면 앱에서 신호 받아서
+    if(r_data == "eat_time"): # 약 먹을 시간 되면 앱에서 신호 받아서
         # 약봉지 하나가 나오는만큼 모터를 돌려 내보내기 
         while True:
             distance = measure_distance()
@@ -63,7 +79,6 @@ while True:
                 motor.stop()
                 break
 
-        timeToEatingPill = 0 # 약 봉지 내보내고 나면 다시 0
         ledOn_Thread.start()
         buzzerOn_Thread.start()
         # 초음파로 약 없어진거 감지하면 센서 멈출 예정
@@ -74,14 +89,15 @@ while True:
             
             if distance > 3: # 약 봉지가 초음파 센서에 감지 안되는 거리를 3이라고 가정
                 print("약 복용 완료")
-                # 블루투스로 앱에 약 복용 완료 신호 보낼 예정
+                sendData = "약 복용 완료 \r\n"   # 약 복용 완료라는 데이터 보냄.
+                BlSerial.write(sendData.encode())  # write를 이용해서 위의 메세지를 시리얼 데이터로 전송
                 break
             
         ledOn_Thread.stop()
         buzzerOn_Thread.stop()
     
     # 약을 넣을 때   
-    if GPIO.input(15) == True: # 버튼이 눌리면 약봉지 돌려서 말기 시작
+    if GPIO.input(5) == True: # 버튼이 눌리면 약봉지 돌려서 말기 시작
          motor = Robot(left=(20, 21), right=(19, 26))
          print("약 봉지 말기")
          
@@ -93,7 +109,7 @@ while True:
                  break
     
     # 약을 외출 시 미리 꺼내는 경우
-    if timeToEatingPill == 2:
+    if r_data == "takeout":
         # 약봉지 하나가 나오는만큼 모터를 돌려 내보내기 
         while True:
             distance = measure_distance()
@@ -101,7 +117,8 @@ while True:
             motor.forward(speed = 1)  # 이건 속도 (0~1) 사이의 값으로 설정
             if distance == 1: # 초음파 센서를 이용하여 측정할 예정이며 약통이 정확히 만들어지면 거리 제대로 측정하여 수정
                 motor.stop()
-                print("약 내보내기 완료")
+                sendData = "약 꺼내기 완료 \r\n"
+                BlSerial.write(sendData.encode())  #write를 이용해서 위의 메세지를 시리얼 데이터로 전송한다.
                 break
         
                  
