@@ -84,12 +84,12 @@
             android:textStyle="bold"
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/main_font"
-            android:text="* 하루에 약 먹는 횟수: "/>
+            android:text="* 약 복용 요일: "/>
         <TextView
             android:id="@+id/enroll_date_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2"
+            android:text="월, 수, 금"
             android:textStyle="bold"
             android:textSize="16dp"
             android:layout_gravity="center_vertical"
@@ -98,13 +98,47 @@
             android:fontFamily="@font/main_font" />
     </LinearLayout>
 
-    <ImageView
+    <LinearLayout
+        android:id="@+id/enroll_time_lo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/enroll_date_lo"
+        app:layout_constraintStart_toStartOf="@id/enroll_date_lo">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/main_font"
+            android:text="* 약 복용 시간: "/>
+        <TextView
+            android:id="@+id/enroll_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10시 00분, 18시 30분"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/main_font" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/enroll_remove_btn"
         android:layout_width="70dp"
-        android:layout_height="60dp"
-        android:src="@drawable/logo"
-        android:layout_marginStart="60dp"
-        app:layout_constraintStart_toEndOf="@id/enroll_category_lo"
+        android:layout_height="50dp"
+        android:background="@drawable/btn"
+        android:layout_marginEnd="7dp"
+        android:text="삭제"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:fontFamily="@font/main_font"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

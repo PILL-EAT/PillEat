@@ -18,6 +18,12 @@ class HomeProtectorPage: AppCompatActivity() {
         initBottomNavigation()
     }
 
+    private fun getData(): Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("protectorId", 0)
+        return getData
+    }
+
     private fun initBottomNavigation() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.main_frm, TakingYnFragment())

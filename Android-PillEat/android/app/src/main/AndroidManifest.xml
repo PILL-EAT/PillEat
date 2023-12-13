@@ -24,6 +24,7 @@
         android:roundIcon="@drawable/logo_img"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pilleat"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31" >
 
         <service android:name=".all.ForeGround"

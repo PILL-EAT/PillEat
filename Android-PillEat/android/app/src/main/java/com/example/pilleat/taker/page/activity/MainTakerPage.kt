@@ -3,15 +3,23 @@ package com.example.pilleat.taker.page.activity
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.pilleat.all.page.activity.SearchPage
 import com.example.pilleat.all.page.activity.SettingPage
+import com.example.pilleat.all.response.Result
 import com.example.pilleat.databinding.ActivityMaintakerBinding
 import com.example.pilleat.taker.page.dialog.BluetoothDialog
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 
 
-class MainTakerPage: AppCompatActivity() {
+class MainTakerPage : AppCompatActivity() {
     private lateinit var binding: ActivityMaintakerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +40,7 @@ class MainTakerPage: AppCompatActivity() {
         }
 
         binding.mainTakerEnrollBtn.setOnClickListener {
-            val intent = Intent(this@MainTakerPage, EnrollPillPage::class.java)
-            startActivity(intent)
+            sendData()
         }
 
         binding.mainTakerSearchBtn.setOnClickListener {
@@ -42,14 +49,50 @@ class MainTakerPage: AppCompatActivity() {
         }
 
         binding.mainTakerHomeBtn.setOnClickListener {
-            val intent = Intent(this@MainTakerPage, HomeTakerPage::class.java)
-            startActivity(intent)
+            sendData2()
         }
 
         binding.mainTakerSettingBtn.setOnClickListener {
-            val intent = Intent(this@MainTakerPage, SettingPage::class.java)
-            startActivity(intent)
+            sendData3()
         }
+    }
+
+    private fun getData(): Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("takerId", 0)
+        return getData
+    }
+
+    private fun getData2(): Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("userIdx", 0)
+        return getData
+    }
+
+    private fun getData3(): Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("clientId", 0)
+        return getData
+    }
+
+    private fun sendData() {
+        val intent = Intent(this@MainTakerPage, EnrollPillPage::class.java)
+        intent.putExtra("takerId", getData())
+        startActivity(intent)
+    }
+
+    private fun sendData2() {
+        val intent = Intent(this@MainTakerPage, HomeTakerPage::class.java)
+        intent.putExtra("userId", getData())
+        intent.putExtra("userIdx", getData2())
+        intent.putExtra("clientId", getData3())
+        startActivity(intent)
+    }
+
+    private fun sendData3() {
+        val intent = Intent(this@MainTakerPage, SettingPage::class.java)
+        intent.putExtra("takerId", getData())
+        startActivity(intent)
     }
 
     private fun showDialog() {
