@@ -91,7 +91,9 @@ while True:
              if GPIO.input(15) == True: # 사용자가 약이 다 말렸다고 판단하여 버튼을 누르면 모터 멈춤
                  motor.stop()
                  break
-             
+    
+    # 약을 외출 시 미리 꺼내는 경우
+                 
          
          
          
