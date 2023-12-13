@@ -129,11 +129,11 @@ module.exports = {
     },
 
     // 내 정보 보기
-    userInfo:(req,res)=>{
+    userInfo: (req, res) => {
         const userId = req.params.userId;
         console.log("userInfo " + userId)
-        db.query('select * from user where user_id = ?',[userId], (err,result)=>{
-            if(err){
+        db.query('SELECT * FROM user WHERE user_id = ?', [userId], (err, result) => {
+            if (err) {
                 const responseData = {
                     isSuccess: false,
                     code: 600,
@@ -141,27 +141,37 @@ module.exports = {
                     result: null
                 };
                 res.json(responseData);
-            }else{ 
-                const responseData = {
-                    isSuccess: true,
-                    code: 200,
-                    message: "요청에 성공하였습니다.",
-                    result: {
-                        email: result[0].user_email,
-                        password: result[0].user_password,
-                        name: result[0].user_name,
-                        birth: result[0].user_birth,
-                        phone: result[0].user_number,
-                        join_date: result[0].user_date,
-                        mode: result[0].user_type
-                        
-                    }
-                    
-                };
-                res.json(responseData);
+            } else {
+                if (result.length === 0) {
+                    // 쿼리 결과가 없는 경우에 대한 처리
+                    const responseData = {
+                        isSuccess: false,
+                        code: 204,
+                        message: "해당 유저 정보가 없습니다.",
+                        result: null
+                    };
+                    res.json(responseData);
+                } else {
+                    const responseData = {
+                        isSuccess: true,
+                        code: 200,
+                        message: "요청에 성공하였습니다.",
+                        result: {
+                            email: result[0].user_email,
+                            password: result[0].user_password,
+                            name: result[0].user_name,
+                            birth: result[0].user_birth,
+                            phone: result[0].user_number,
+                            join_date: result[0].user_date,
+                            mode: result[0].user_type
+                        }
+                    };
+                    res.json(responseData);
+                }
             }
-        })
+        });
     },
+    
 
     // 내 정보 수정
     userUpdate: (req, res) => {
@@ -170,7 +180,7 @@ module.exports = {
     
         console.log("userUpdate " + userId)
         db.query(
-            'UPDATE user SET user_name = ?, user_birth = ?, user_phone = ? WHERE user_Id = ?',
+            'UPDATE user SET user_name = ?, user_birth = ?, user_number = ? WHERE user_Id = ?',
             [updateData.name, updateData.birth, updateData.phone, userId],(err, result) => {
                 if (err) {
                     const responseData = {

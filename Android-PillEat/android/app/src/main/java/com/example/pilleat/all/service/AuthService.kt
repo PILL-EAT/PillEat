@@ -7,6 +7,7 @@ import com.example.pilleat.all.response.UserResult
 import com.example.pilleat.all.view.LoginView
 import com.example.pilleat.getRetrofit
 import com.example.pilleat.all.retrofit_interface.AuthRetrofitInterface
+import com.example.pilleat.all.table.Auth
 import com.example.pilleat.all.table.User
 import com.example.pilleat.all.view.JoinView
 import retrofit2.Call
@@ -25,9 +26,9 @@ class AuthService {
         this.joinView = joinView
     }
 
-    fun login(email: String, password: String) {
+    fun login(auth: Auth) {
         val authService = getRetrofit().create(AuthRetrofitInterface::class.java)
-        authService.login(email, password).enqueue(object: Callback<LoginResponse> {
+        authService.login(auth).enqueue(object: Callback<LoginResponse> {
             // login에 성공했을 경우
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 Log.d("LOGIN_SUCCESS", response.toString())

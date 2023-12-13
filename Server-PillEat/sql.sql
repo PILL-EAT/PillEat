@@ -1,4 +1,4 @@
-use pilleatDB;
+use db23322;
 
 CREATE TABLE user (
   user_id int NOT NULL AUTO_INCREMENT,
@@ -23,19 +23,6 @@ INSERT INTO user (user_email,user_password,user_name,user_birth,user_number,user
 VALUES ('pilleat','1234','관리자','0','0','0', null, 'manager');
 
 select * from user;
------------------------------------------------------------
-
-CREATE TABLE pill_information (
-  pill_id  int auto_increment,
-  pill_name  VARCHAR(20) not null,
-  pill_use varchar(1000),
-  primary key(pill_id)
-);
-
-INSERT INTO pill_information (pill_name, pill_use) VALUES
-('Aspirin', 'Take one tablet with water after meals.'),
-('Ibuprofen', 'Take two tablets every 8 hours as needed.'),
-('Acetaminophen', 'Take one tablet every 6 hours. Do not exceed recommended dosage.');
 ----------------------------------------------------------------------------------
 
 CREATE TABLE pill_alert (
@@ -43,20 +30,34 @@ CREATE TABLE pill_alert (
   taker_id INT NOT NULL,
   pill_name VARCHAR(50) NOT NULL,
   pill_kind VARCHAR(50) NOT NULL,
-  pill_volumn VARCHAR(20) NOT NULL,
   alert_time VARCHAR(50) NOT NULL,
   alert_day VARCHAR(50) NOT NULL,
   
   PRIMARY KEY (pill_alert_id),
-  FOREIGN KEY (taker_id) REFERENCES taker(taker_id)
+  FOREIGN KEY (taker_id) REFERENCES user(user_id)
 );
 
-INSERT INTO pill_alert (taker_id, pill_name, pill_kind, pill_volumn, alert_time, alert_day) VALUES
-(1, '아스피린', '진통제','2.5mg', '08:00', '월요일'),
-(1, '이부프로펜', '소염제','1알', '12:00', '수요일'),
-(1, '아세트아미노펜', '진통제','2알', '20:00', '금요일');
+INSERT INTO pill_alert (taker_id, pill_name, pill_kind, alert_time, alert_day) VALUES
+(1, '아스피린', '진통제', '08:00', '1010101');
+
 
 select * from pill_alert
 
 
 --------------------------------------------------------------------
+
+CREATE TABLE pill_history (
+  pill_history_id INT AUTO_INCREMENT,
+  date VARCHAR(20) NOT NULL,
+  pill_alert_id INT NOT NULL,
+  is_taken BOOLEAN NOT NULL,
+  
+  PRIMARY KEY (pill_history_id),
+  FOREIGN KEY (pill_alert_id) REFERENCES pill_alert(pill_alert_id)
+);
+
+INSERT INTO pill_history (date, pill_alert_id, is_taken) 
+VALUES 
+  ('2023-12-12', 10, 0),
+  ('2023-12-12', 11, 1),
+  ('2023-12-12', 12, 0);

@@ -169,10 +169,13 @@ module.exports = {
                 return res.json(responseData);
             }else{
                 const list= result.map(result => ({
+                    userId: result.taker_id,
+                    drugId: result.pill_alert_id,
                     name: result.pill_name,
-                    time: result.pill_time,
+                    time: result.alert_time,
                     finishYN : result.is_taken
                   }));
+                  console.log(list)
                 const responseData = {
                     isSuccess: true,
                     code: 200,

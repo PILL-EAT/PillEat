@@ -21,6 +21,7 @@ class EnrollPillService {
         val enrollPillService = getRetrofit().create(TakerRetrofitInterface::class.java)
         enrollPillService.enrollPill(enrollPill, userId).enqueue(object : Callback<EnrollPillResponse> {
             override fun onResponse(call: Call<EnrollPillResponse>, response: Response<EnrollPillResponse>) {
+                Log.d("약 등록 API", response.toString())
                 val resp: EnrollPillResponse = response.body()!!
                 when(resp.code) {
                     200 -> enrollPillView.onEnrollPillSuccess()

@@ -33,11 +33,11 @@ class UserService {
         val userService = getRetrofit().create(UserRetrofitInterface::class.java)
         userService.getUserInfo(userId).enqueue(object : Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                Log.d("USER-READ-SUCCESS", response.toString())
+                Log.d("USER-READ", response.body().toString())
 
                 val resp: UserResponse = response.body()!!
                 when(resp.code) {
-                    200 -> userReadView.onReadSuccess(resp.code)
+                    200 -> userReadView.onReadSuccess(resp.code, resp)
                     else -> userReadView.onReadFailure(response)
                 }
             }
@@ -56,7 +56,7 @@ class UserService {
 
                 val resp: UserResponse = response.body()!!
                 when(resp.code) {
-                    200 -> userUpdateView.onUpdateSuccess(resp.code)
+                    200 -> userUpdateView.onUpdateSuccess(resp.code, resp)
                     else -> userUpdateView.onUpdateFailure(response)
                 }
             }
