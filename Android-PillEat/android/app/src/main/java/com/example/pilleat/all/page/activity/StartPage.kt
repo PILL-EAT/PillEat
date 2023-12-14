@@ -17,7 +17,6 @@ import okhttp3.WebSocketListener
 
 class StartPage: AppCompatActivity() {
     private lateinit var binding: ActivityStartBinding
-    private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,21 +29,6 @@ class StartPage: AppCompatActivity() {
 
         binding.startLoginBtn.setOnClickListener {
             startLoginPage()
-        }
-
-        binding.startChecking.setOnClickListener {
-            val intent = Intent(this@StartPage, MainTakerPage::class.java)
-            startActivity(intent)
-        }
-
-        binding.startChecking2.setOnClickListener {
-            val intent = Intent(this@StartPage, MainProtectorPage::class.java)
-            startActivity(intent)
-        }
-
-        binding.startChecking3.setOnClickListener {
-            val intent = Intent(this@StartPage, MainManagerPage::class.java)
-            startActivity(intent)
         }
     }
 

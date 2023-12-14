@@ -18,5 +18,6 @@ data class PillList(
     @SerializedName("name") val name: String,
     @SerializedName("category") val category: String,
     @SerializedName("time") val time: String,
-    @SerializedName("day") val day: String
+    @SerializedName("day") val day: String,
+    @SerializedName("iot") val iot: Int
 )

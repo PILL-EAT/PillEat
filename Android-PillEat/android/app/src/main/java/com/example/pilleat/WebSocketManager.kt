@@ -1,22 +1,31 @@
 package com.example.pilleat
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 
-class WebSocketManager private constructor() {
+
+const val CHANNEL_ID = "PILLEAT"
+const val notificationId = 1
+
+class WebSocketManager private constructor(private val context: Context) {
     private val client = OkHttpClient()
     private var webSocket: WebSocket? = null
 
     companion object {
         private var instance: WebSocketManager? = null
 
-        fun getInstance(): WebSocketManager {
+        fun getInstance(context: Context): WebSocketManager {
             if (instance == null) {
-                instance = WebSocketManager()
+                instance = WebSocketManager(context)
             }
             return instance!!
         }
@@ -25,7 +34,7 @@ class WebSocketManager private constructor() {
     fun getWebSocket(): WebSocket {
         if (webSocket == null) {
             // WebSocket 연결 초기화 로직
-            val request = Request.Builder().url("ws://ceprj.gachon.ac.kr:60013/ws").build()
+            val request = Request.Builder().url("ws://ceprj.gachon.ac.kr:60037/ws").build()
             val listener = MyWebSocketListener()
             webSocket = client.newWebSocket(request, listener)
             client.dispatcher.executorService.shutdown()
@@ -45,6 +54,7 @@ class WebSocketManager private constructor() {
             Log.d("SOCKET-GET", text)
             println(text)
             // 메시지 수신 시의 동작
+            //showNotification(text)
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
@@ -58,5 +68,36 @@ class WebSocketManager private constructor() {
             Log.d("SOCKET-FAILURE", t.toString())
             // 연결 실패 시의 동작
         }
+
+        private fun showNotification(message: String) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channelId = "MyChannelId"
+                val channel = NotificationChannel(
+                    channelId,
+                    "My Channel",
+                    NotificationManager.IMPORTANCE_HIGH
+                )
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            val notificationBuilder = NotificationCompat.Builder(context, "MyChannelId")
+                .setContentTitle("PILL EAT")
+                .setContentText(message)
+                .setSmallIcon(R.drawable.logo_img)
+                .setAutoCancel(true)
+                .setTimeoutAfter(8000)
+
+            notificationManager.notify(1, notificationBuilder.build())
+            Log.d("알림창 구현", message)
+        }
     }
+//
+//    private fun createJsonData(): JSONObject {
+//        val jsonData = JSONObject()
+//        jsonData.put("type", "string") // 원하는 키-값 쌍을 추가할 수 있습니다.
+//        jsonData.put("message", "엽떡먹고싶음")
+//        return jsonData
+//    }
 }

@@ -67,7 +67,7 @@ class LoginPage : AppCompatActivity(), LoginView {
     private fun protectorPage(protectorResult: Result) {
         val intent = Intent(this@LoginPage, MainProtectorPage::class.java)
         intent.putExtra("protectorId", protectorResult.userId)
-        intent.putExtra("protectorId", protectorResult.clientId)
+        intent.putExtra("protectorClientId", protectorResult.clientId)
         startActivity(intent)
     }
 
@@ -96,13 +96,13 @@ class LoginPage : AppCompatActivity(), LoginView {
     override fun onLoginSuccess(code: Int, result: Result) {
         when(code) {
             1000 -> {
-                val webSocket = WebSocketManager.getInstance().getWebSocket()
-
-                // JSON 데이터 생성
-                val jsonData = createJsonData(result)
-
-                // WebSocket을 통해 JSON 데이터 전송
-                webSocket.send(jsonData.toString())
+//                val webSocket = WebSocketManager.getInstance(this).getWebSocket()
+//
+//                // JSON 데이터 생성
+//                val jsonData = createJsonData(result)
+//
+//                // WebSocket을 통해 JSON 데이터 전송
+//                webSocket.send(jsonData.toString())
                 nextActivity(result)
                 Log.d("LOGIN-SUCCESS", result.toString())
                 Toast.makeText(this@LoginPage, "로그인되었습니다.", Toast.LENGTH_SHORT).show()

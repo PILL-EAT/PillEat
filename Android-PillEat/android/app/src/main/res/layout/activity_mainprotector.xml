@@ -22,22 +22,6 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/main_protector_enroll_taker_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/main_btn"
-        android:text="복용자 등록"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="16dp"
-        android:fontFamily="@font/main_font"
-        android:layout_marginTop="65dp"
-        app:layout_constraintStart_toStartOf="@id/main_protector_home_btn"
-        app:layout_constraintEnd_toEndOf="@id/main_protector_home_btn"
-        app:layout_constraintBottom_toTopOf="@id/main_protector_search_btn"
-        app:layout_constraintTop_toBottomOf="@id/main_protector_home_btn"/>
-
-    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/main_protector_search_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +35,7 @@
         app:layout_constraintStart_toStartOf="@id/main_protector_home_btn"
         app:layout_constraintEnd_toEndOf="@id/main_protector_home_btn"
         app:layout_constraintBottom_toTopOf="@id/main_protector_setting_btn"
-        app:layout_constraintTop_toBottomOf="@id/main_protector_enroll_taker_btn"/>
+        app:layout_constraintTop_toBottomOf="@id/main_protector_home_btn"/>
 
 
     <androidx.appcompat.widget.AppCompatButton

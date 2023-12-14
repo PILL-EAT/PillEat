@@ -95,59 +95,199 @@
             android:layout_marginTop="40dp"
             app:layout_constraintEnd_toEndOf="@id/enroll_input_date_et"
             app:layout_constraintStart_toStartOf="@id/enroll_input_date_et"
-            app:layout_constraintTop_toBottomOf="@id/enroll_time3_et" />
+            app:layout_constraintTop_toBottomOf="@id/enroll_time3_lo" />
 
-        <EditText
-            android:id="@+id/enroll_time1_et"
-            android:layout_width="300dp"
+        <LinearLayout
+            android:id="@+id/enroll_time1_lo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/main_edittext"
-            android:drawableLeft="@drawable/logo"
-            android:drawablePadding="10dp"
-            android:fontFamily="@font/main_font"
-            android:hint="언제 복용할 예정입니까?\n(예, 12:12)"
-            android:textColor="@color/black"
-            android:textSize="14dp"
+            android:orientation="horizontal"
+            android:layout_margin="15dp"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/enroll_time_btn"
-            app:layout_constraintStart_toStartOf="@id/enroll_time_btn"
-            app:layout_constraintTop_toBottomOf="@id/enroll_time_btn" />
+            app:layout_constraintTop_toBottomOf="@id/enroll_time_btn"
+            app:layout_constraintStart_toStartOf="@id/enroll_week_btn"
+            app:layout_constraintEnd_toEndOf="@id/enroll_week_btn"
+            app:layout_constraintBottom_toTopOf="@id/enroll_time2_lo">
 
-        <EditText
-            android:id="@+id/enroll_time2_et"
-            android:layout_width="300dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간 등록하기: "
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font"/>
+
+            <EditText
+                android:id="@+id/enroll_time1_hour_tv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/main_edittext"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/main_font"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 시"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/main_font"/>
+
+            <EditText
+                android:id="@+id/enroll_time1_minute_tv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/main_edittext"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/main_font"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 분"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/main_font"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/enroll_time2_lo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/main_edittext"
-            android:drawableLeft="@drawable/logo"
-            android:drawablePadding="10dp"
-            android:fontFamily="@font/main_font"
-            android:hint="언제 복용할 예정입니까?\n(예, 12:12)"
-            android:textColor="@color/black"
-            android:textSize="14dp"
+            android:orientation="horizontal"
+            android:layout_margin="15dp"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/enroll_time1_et"
-            app:layout_constraintStart_toStartOf="@id/enroll_time1_et"
-            app:layout_constraintTop_toBottomOf="@id/enroll_time1_et" />
+            app:layout_constraintTop_toBottomOf="@id/enroll_time1_lo"
+            app:layout_constraintStart_toStartOf="@id/enroll_week_btn"
+            app:layout_constraintEnd_toEndOf="@id/enroll_week_btn"
+            app:layout_constraintBottom_toTopOf="@id/enroll_time3_lo">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간 등록하기: "
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font"/>
 
-        <EditText
-            android:id="@+id/enroll_time3_et"
-            android:layout_width="300dp"
+            <EditText
+                android:id="@+id/enroll_time2_hour_tv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/main_edittext"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/main_font"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 시"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/main_font"/>
+
+            <EditText
+                android:id="@+id/enroll_time2_minute_tv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/main_edittext"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/main_font"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 분"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/main_font"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/enroll_time3_lo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/main_edittext"
-            android:drawableLeft="@drawable/logo"
-            android:drawablePadding="10dp"
-            android:fontFamily="@font/main_font"
-            android:hint="언제 복용할 예정입니까?\n(예, 12:12)"
-            android:textColor="@color/black"
-            android:textSize="14dp"
+            android:orientation="horizontal"
+            android:layout_margin="15dp"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/enroll_time2_et"
-            app:layout_constraintStart_toStartOf="@id/enroll_time2_et"
-            app:layout_constraintTop_toBottomOf="@id/enroll_time2_et" />
+            app:layout_constraintTop_toBottomOf="@id/enroll_time2_lo"
+            app:layout_constraintStart_toStartOf="@id/enroll_week_btn"
+            app:layout_constraintEnd_toEndOf="@id/enroll_week_btn"
+            app:layout_constraintBottom_toTopOf="@id/enroll_week_btn">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간 등록하기: "
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font"/>
+
+            <EditText
+                android:id="@+id/enroll_time3_hour_tv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/main_edittext"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/main_font"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 시"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/main_font"/>
+
+            <EditText
+                android:id="@+id/enroll_time3_minute_tv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/main_edittext"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/main_font"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 분"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/main_font"/>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/week_lo"

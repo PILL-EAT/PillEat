@@ -1,25 +1,28 @@
 package com.example.pilleat.taker.page.activity
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.pilleat.R
 import com.example.pilleat.all.page.activity.SearchPage
 import com.example.pilleat.all.page.activity.SettingPage
-import com.example.pilleat.all.response.Result
 import com.example.pilleat.databinding.ActivityMaintakerBinding
+import com.example.pilleat.taker.page.dialog.SetTakerDialog
+import com.example.pilleat.protector.service.SetTakerService
+import com.example.pilleat.protector.view.SetTakerView
 import com.example.pilleat.taker.page.dialog.BluetoothDialog
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
+import com.example.pilleat.taker.table.PhoneNumber
 
 
-class MainTakerPage : AppCompatActivity() {
+class MainTakerPage : AppCompatActivity(), SetTakerView, SetTakerDialog.SetTakerDialogListener {
     private lateinit var binding: ActivityMaintakerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +58,39 @@ class MainTakerPage : AppCompatActivity() {
         binding.mainTakerSettingBtn.setOnClickListener {
             sendData3()
         }
+
+        binding.mainTakerEnrollProtectorBtn.setOnClickListener {
+            showSetProtectorDialog()
+        }
+    }
+
+    private fun setTaker(phone: PhoneNumber, takerId: Int) {
+        val setTakerService = SetTakerService()
+        setTakerService.initSetTakerView(this@MainTakerPage)
+        setTakerService.inputTaker(phone, takerId)
+    }
+
+    private fun showSetProtectorDialog() {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.dialog_enroll_taker, null)
+
+        val alertDialog = AlertDialog.Builder(this@MainTakerPage)
+            .setPositiveButton("등록/재등록") { dialog, which ->
+                val inputText = view.findViewById<EditText>(R.id.dialog_enroll_taker_et)
+                val userInput = inputText.text.toString()
+                val phone = PhoneNumber(userInput)
+                Log.d("text", userInput)
+                if(getData() == 0) {
+                    setTaker(phone, getData2())
+                } else {
+                    setTaker(phone, getData())
+                }
+            }
+            .setNeutralButton("취소", null)
+            .create()
+
+        alertDialog.setView(view)
+        alertDialog.show()
     }
 
     private fun getData(): Int {
@@ -97,5 +133,18 @@ class MainTakerPage : AppCompatActivity() {
 
     private fun showDialog() {
         BluetoothDialog(this@MainTakerPage).show()
+    }
+
+    override fun onSetTakerSuccess(code: Int) {
+//        Toast.makeText(this@MainTakerPage, "등록되었습니다.", Toast.LENGTH_SHORT).show()
+        Log.d("보호자 등록", code.toString())
+    }
+
+    override fun onSetTakerFailure(code: Int, message: String) {
+        Toast.makeText(this@MainTakerPage, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onPhoneSet(phone: String) {
+        Log.d("phone", "reset")
     }
 }

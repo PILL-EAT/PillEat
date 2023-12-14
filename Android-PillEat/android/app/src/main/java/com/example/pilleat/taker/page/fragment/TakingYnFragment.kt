@@ -73,6 +73,11 @@ class TakingYnFragment: Fragment(), EnrollRecordView {
         return userId
     }
 
+    private fun getUserId3(): Int {
+        val userId = arguments?.getInt("clientId", 0)!!
+        return userId
+    }
+
     private fun getData() {
         val current: String = SimpleDateFormat(format_yyyyMMdd, Locale.getDefault()).format(calendar.time)
         val enrollRecordService = EnrollRecordService()

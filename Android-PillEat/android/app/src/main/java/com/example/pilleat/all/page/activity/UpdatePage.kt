@@ -2,6 +2,7 @@ package com.example.pilleat.all.page.activity
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pilleat.all.response.UserResponse
@@ -26,6 +27,9 @@ class UpdatePage: AppCompatActivity(), UserReadView, UserUpdateView {
         binding.updateBtn.setOnClickListener {
             updateUserInfo(getUserId())
         }
+        if(binding.protectorPhone.text != "") {
+            binding.protectorLo.visibility = View.VISIBLE
+        }
     }
 
     private fun getUserId(): Int {
@@ -42,6 +46,7 @@ class UpdatePage: AppCompatActivity(), UserReadView, UserUpdateView {
         binding.updateBirthEt.setText(result.result.birth)
         binding.updatePhoneEt.setText(result.result.phone)
         binding.joinModeTv.setText(result.result.mode)
+        binding.protectorPhone.setText(result.result.protector_phone)
 
         if(result.result.mode == "taker") {
             binding.joinModeCb.isChecked = false
@@ -64,9 +69,8 @@ class UpdatePage: AppCompatActivity(), UserReadView, UserUpdateView {
         val phone = binding.updatePhoneEt.text.toString()
         val birth = binding.updateBirthEt.text.toString()
 
-        val result = UserResult(email, password, name, birth, phone, "", "", getUserId())
+        val result = UserResult(email, password, name, birth, phone, "", "", getUserId(), "")
 
-        Log.d("djfksdjfl", result.toString())
         val userService = UserService()
         userService.setUserUpdateView(this@UpdatePage)
 

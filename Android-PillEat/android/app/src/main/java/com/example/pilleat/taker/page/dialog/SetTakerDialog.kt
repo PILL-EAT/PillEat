@@ -1,15 +1,17 @@
-package com.example.pilleat.protector.page.dialog
+package com.example.pilleat.taker.page.dialog
 
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pilleat.databinding.DialogEnrollTakerBinding
+import com.example.pilleat.protector.service.SetTakerService
+import com.example.pilleat.taker.page.activity.MainTakerPage
 
 class SetTakerDialog(private val activity: AppCompatActivity): Dialog(activity) {
     private lateinit var binding: DialogEnrollTakerBinding
     private var listener: SetTakerDialogListener? = null
 
-    fun setListener(listener: SetTakerDialogListener) {
+    fun setListener(listener: MainTakerPage) {
         this.listener = listener
     }
 
@@ -23,13 +25,6 @@ class SetTakerDialog(private val activity: AppCompatActivity): Dialog(activity) 
         setContentView(binding.root)
 
         initViews()
-
-        binding.dialogEnrollBtn.setOnClickListener {
-            val phone = binding.dialogEnrollTakerEt.text.toString()
-            listener?.onPhoneSet(phone)
-            dismiss()
-        }
-
     }
 
     private fun initViews() {

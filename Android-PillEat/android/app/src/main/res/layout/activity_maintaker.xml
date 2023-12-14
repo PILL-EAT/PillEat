@@ -16,7 +16,7 @@
         android:fontFamily="@font/main_font"
         android:textSize="16dp"
         android:textColor="@color/white"
-        app:layout_constraintVertical_bias="0.24"
+        app:layout_constraintVertical_bias="0.18"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +52,23 @@
         app:layout_constraintTop_toBottomOf="@id/main_taker_enroll_btn"
         app:layout_constraintStart_toStartOf="@id/main_taker_enroll_btn"
         app:layout_constraintEnd_toEndOf="@id/main_taker_enroll_btn"
-        app:layout_constraintBottom_toTopOf="@id/main_taker_home_btn"/>
+        app:layout_constraintBottom_toTopOf="@id/main_taker_enroll_protector_btn"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/main_taker_enroll_protector_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_btn"
+        android:text="보호자 등록"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:fontFamily="@font/main_font"
+        android:layout_marginTop="65dp"
+        app:layout_constraintStart_toStartOf="@id/main_taker_home_btn"
+        app:layout_constraintEnd_toEndOf="@id/main_taker_home_btn"
+        app:layout_constraintBottom_toTopOf="@id/main_taker_home_btn"
+        app:layout_constraintTop_toBottomOf="@id/main_taker_search_btn"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/main_taker_home_btn"
@@ -65,7 +81,7 @@
         android:fontFamily="@font/main_font"
         android:textStyle="bold"
         android:layout_marginTop="65dp"
-        app:layout_constraintTop_toBottomOf="@id/main_taker_search_btn"
+        app:layout_constraintTop_toBottomOf="@id/main_taker_enroll_protector_btn"
         app:layout_constraintStart_toStartOf="@id/main_taker_enroll_btn"
         app:layout_constraintEnd_toEndOf="@id/main_taker_enroll_btn"
         app:layout_constraintBottom_toTopOf="@id/main_taker_setting_btn"/>

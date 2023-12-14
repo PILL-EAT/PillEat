@@ -45,10 +45,23 @@ class SettingPage: AppCompatActivity(), UserDeleteView {
         return getData
     }
 
+    private fun getData2(): Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("protectorId", 0)
+        Log.d("ID", getData.toString())
+        return getData
+    }
+
     private fun update() {
-        val intent = Intent(this@SettingPage, UpdatePage::class.java)
-        intent.putExtra("userId", getData())
-        startActivity(intent)
+        if(getData() == 0) {
+            val intent = Intent(this@SettingPage, UpdatePage::class.java)
+            intent.putExtra("userId", getData2())
+            startActivity(intent)
+        } else {
+            val intent = Intent(this@SettingPage, UpdatePage::class.java)
+            intent.putExtra("userId", getData())
+            startActivity(intent)
+        }
     }
 
     private fun logout() {

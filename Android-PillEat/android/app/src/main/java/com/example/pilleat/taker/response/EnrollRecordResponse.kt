@@ -18,5 +18,6 @@ data class RecordResult(
     @SerializedName("drugId") val drugId: Int,
     @SerializedName("name") val name: String,
     @SerializedName("time") val time: String,
-    @SerializedName("finishYN") var finishYN: Int
+    @SerializedName("finishYN") var finishYN: Int,
+    @SerializedName("iot") var iot: Int
 )

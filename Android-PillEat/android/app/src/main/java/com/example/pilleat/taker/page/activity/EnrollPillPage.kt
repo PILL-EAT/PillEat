@@ -73,34 +73,19 @@ class EnrollPillPage: AppCompatActivity(), EnrollPillView{
         }
 
         if (binding.enrollInputDateEt.text.toString() == "1") {
-            binding.enrollTime1Et.visibility = View.VISIBLE
-            if(binding.enrollTime1Et.text.toString().isEmpty()) {
-                Toast.makeText(this@EnrollPillPage, "모두 입력해주세요.", Toast.LENGTH_SHORT).show()
-                return
-            }
+            binding.enrollTime1Lo.visibility = View.VISIBLE
+            return
         } else if (binding.enrollInputDateEt.text.toString() == "2") {
-            binding.enrollTime1Et.visibility = View.VISIBLE
-            binding.enrollTime2Et.visibility = View.VISIBLE
-            if(binding.enrollTime1Et.text.toString().isEmpty() || binding.enrollTime2Et.text.toString().isEmpty()) {
-                Toast.makeText(this@EnrollPillPage, "모두 입력해주세요.", Toast.LENGTH_SHORT).show()
-                return
-            }
+            binding.enrollTime1Lo.visibility = View.VISIBLE
+            binding.enrollTime2Lo.visibility = View.VISIBLE
         } else if (binding.enrollInputDateEt.text.toString() == "3") {
-            binding.enrollTime1Et.visibility = View.VISIBLE
-            binding.enrollTime2Et.visibility = View.VISIBLE
-            binding.enrollTime3Et.visibility = View.VISIBLE
-            if(binding.enrollTime1Et.text.toString().isEmpty() || binding.enrollTime2Et.text.toString().isEmpty() || binding.enrollTime3Et.text.toString().isEmpty()) {
-                Toast.makeText(this@EnrollPillPage, "모두 입력해주세요.", Toast.LENGTH_SHORT).show()
-                return
-            }
+            binding.enrollTime1Lo.visibility = View.VISIBLE
+            binding.enrollTime2Lo.visibility = View.VISIBLE
+            binding.enrollTime3Lo.visibility = View.VISIBLE
         } else {
-            binding.enrollTime1Et.visibility = View.VISIBLE
-            binding.enrollTime2Et.visibility = View.VISIBLE
-            binding.enrollTime3Et.visibility = View.VISIBLE
-            if(binding.enrollTime1Et.text.toString().isEmpty() || binding.enrollTime2Et.text.toString().isEmpty() || binding.enrollTime3Et.text.toString().isEmpty()) {
-                Toast.makeText(this@EnrollPillPage, "모두 입력해주세요.", Toast.LENGTH_SHORT).show()
-                return
-            }
+            binding.enrollTime1Lo.visibility = View.VISIBLE
+            binding.enrollTime2Lo.visibility = View.VISIBLE
+            binding.enrollTime3Lo.visibility = View.VISIBLE
             Toast.makeText(this@EnrollPillPage, "약은 하루에 최대 3번 복용하실 수 있습니다.", Toast.LENGTH_SHORT).show()
         }
     }
@@ -117,9 +102,9 @@ class EnrollPillPage: AppCompatActivity(), EnrollPillView{
         val pill_name: String = binding.enrollInputNameEt.text.toString()
         val pill_category: String = binding.enrollInputCategoryEt.text.toString()
         val pill_date: Int = binding.enrollInputDateEt.text.toString().toInt()
-        val pill_time1: String = binding.enrollTime1Et.text.toString()
-        val pill_time2: String = binding.enrollTime2Et.text.toString()
-        val pill_time3: String = binding.enrollTime3Et.text.toString()
+        val pill_time1: String = binding.enrollTime1HourTv.text.toString() + ":" + binding.enrollTime1MinuteTv.text.toString()
+        val pill_time2: String = binding.enrollTime2HourTv.text.toString() + ":" + binding.enrollTime2MinuteTv.text.toString()
+        val pill_time3: String = binding.enrollTime3HourTv.text.toString() + ":" + binding.enrollTime3MinuteTv.text.toString()
         val times = Times(
             time1 = pill_time1,
             time2 = pill_time2,
@@ -128,7 +113,7 @@ class EnrollPillPage: AppCompatActivity(), EnrollPillView{
 
         val pill_time : ArrayList<Times> = arrayListOf(times)
         val pill_day: String = showWeek()
-        val pill_iot = if (binding.enrollIotCb.isChecked) true else false
+        val pill_iot = if (binding.enrollIotCb.isChecked) 1 else 0
 
         return EnrollPill(takerId, pill_name, pill_category, pill_date, pill_time, pill_day, pill_iot) // 사용자의 입력값 리턴
     }

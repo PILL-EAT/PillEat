@@ -7,7 +7,7 @@ data class EnrollPill(
     var date: Int,
     var time: ArrayList<Times>,
     var day: String,
-    var iot: Boolean
+    var iot: Int
 )
 
 data class Times(

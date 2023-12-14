@@ -17,5 +17,6 @@ data class UserResult(
     @SerializedName("phone") var phone: String,
     @SerializedName("mode") val mode: String,
     @SerializedName("join_date") val join_date: String,
-    @SerializedName("id") val id: Int
+    @SerializedName("id") val id: Int,
+    @SerializedName("protector_phone") val protector_phone: String
 )

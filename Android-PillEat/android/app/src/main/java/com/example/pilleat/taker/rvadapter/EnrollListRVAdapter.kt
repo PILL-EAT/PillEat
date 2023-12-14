@@ -21,6 +21,7 @@ class EnrollListRVAdapter() : RecyclerView.Adapter<EnrollListRVAdapter.ViewHolde
         val pill_kind: TextView = binding.enrollCategoryTv
         val alert_day: TextView = binding.enrollDateTv
         val alert_time: TextView = binding.enrollTimeTv
+        val iot: TextView = binding.enrollIotTv
     }
 
     interface MyItemClickListener {
@@ -34,6 +35,7 @@ class EnrollListRVAdapter() : RecyclerView.Adapter<EnrollListRVAdapter.ViewHolde
     }
 
     fun setData(pillList: ArrayList<PillList>) {
+        this.result.clear()
         this.result.addAll(pillList)
         notifyDataSetChanged()
     }
@@ -52,10 +54,12 @@ class EnrollListRVAdapter() : RecyclerView.Adapter<EnrollListRVAdapter.ViewHolde
         holder.pill_kind.text = result[position].category
         holder.alert_day.text = result[position].day
         holder.alert_time.text = result[position].time
+        holder.iot.text = result[position].iot.toString()
         holder.binding.enrollRemoveBtn.setOnClickListener {
             mItemClickListener.onItemRemove(result[position])
+            result.removeAt(position)
             notifyItemRemoved(position)
-            notifyItemRangeChanged(position, result.size)
+            notifyDataSetChanged()
         }
     }
 }
