@@ -6,7 +6,7 @@ const schedulerSetup = require('./lib/scheduler');
 
 const app = express();
 const http = require('http');
-const port = 60013;
+const port = 60037;
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,7 +17,6 @@ const db = require('./lib/db');
 // 사용자 정의 모듈
 var userRouter = require('./router/userRouter');
 var takerRouter = require('./router/takerRouter');
-var protectorRouter = require('./router/protectorRouter');
 var managerRouter = require('./router/managerRouter');
 
 // 웹소켓 및 스케줄러 설정
@@ -32,7 +31,6 @@ app.get('/', (req, res) => {
 // 라우터 설정
 app.use('/user', userRouter);
 app.use('/taker', takerRouter);
-app.use('/protector', protectorRouter);
 app.use('/manager', managerRouter);
 
 // 서버 리스닝

@@ -131,8 +131,13 @@ module.exports = {
     // 내 정보 보기
     userInfo: (req, res) => {
         const userId = req.params.userId;
-        console.log("userInfo " + userId)
-        db.query('SELECT * FROM user WHERE user_id = ?', [userId], (err, result) => {
+        console.log(`userInfo ${userId}`)
+        db.query(`
+        SELECT u.*, p.user_number as protector_number
+        FROM user u
+        LEFT JOIN user p ON u.protector_id = p.user_id
+        WHERE u.user_id = ?;
+      `, [userId], (err, result) => {
             if (err) {
                 const responseData = {
                     isSuccess: false,
@@ -163,7 +168,8 @@ module.exports = {
                             birth: result[0].user_birth,
                             phone: result[0].user_number,
                             join_date: result[0].user_date,
-                            mode: result[0].user_type
+                            mode: result[0].user_type,
+                            protector_phone: result[0].protector_number
                         }
                     };
                     res.json(responseData);

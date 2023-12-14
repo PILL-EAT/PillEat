@@ -8,7 +8,7 @@ CREATE TABLE user (
   user_birth varchar(50) NOT NULL,
   user_number varchar(50) NOT NULL,
   user_date varchar(50) NOT NULL,
-  taker_id int,
+  protector_id int,
   user_type varchar(10) NOT NULL,
   PRIMARY KEY (user_id),
   FOREIGN KEY (taker_id) REFERENCES user(user_id) on delete set NULL
@@ -27,14 +27,15 @@ select * from user;
 
 CREATE TABLE pill_alert (
   pill_alert_id INT AUTO_INCREMENT,
-  taker_id INT NOT NULL,
+  taker_id INT,
   pill_name VARCHAR(50) NOT NULL,
   pill_kind VARCHAR(50) NOT NULL,
   alert_time VARCHAR(50) NOT NULL,
   alert_day VARCHAR(50) NOT NULL,
+  iotYN BOOLEAN not null default false
   
   PRIMARY KEY (pill_alert_id),
-  FOREIGN KEY (taker_id) REFERENCES user(user_id)
+  FOREIGN KEY (taker_id) REFERENCES user(user_id) on delete set NULL
 );
 
 INSERT INTO pill_alert (taker_id, pill_name, pill_kind, alert_time, alert_day) VALUES
@@ -49,11 +50,11 @@ select * from pill_alert
 CREATE TABLE pill_history (
   pill_history_id INT AUTO_INCREMENT,
   date VARCHAR(20) NOT NULL,
-  pill_alert_id INT NOT NULL,
+  pill_alert_id INT,
   is_taken BOOLEAN NOT NULL,
   
   PRIMARY KEY (pill_history_id),
-  FOREIGN KEY (pill_alert_id) REFERENCES pill_alert(pill_alert_id)
+  FOREIGN KEY (pill_alert_id) REFERENCES pill_alert(pill_alert_id) on delete set NULL
 );
 
 INSERT INTO pill_history (date, pill_alert_id, is_taken) 

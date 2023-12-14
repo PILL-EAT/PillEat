@@ -14,11 +14,6 @@ router.post('/drug/enroll/:userId', (req, res) => {
     taker.enroll(req, res);
 });
 
-// 복용 완료 요청(논의 예정)
-router.post('/drug/enroll/:userId', (req, res) => {
-    taker.finish(req,res);
-});
-
 // 등록한 약 삭제 요청 (완성)
 router.delete('/drug/enroll-delete/:drugId', (req, res) => {
     taker.enrollDelete(req,res);
@@ -27,6 +22,11 @@ router.delete('/drug/enroll-delete/:drugId', (req, res) => {
 // 복용 완료 여부 리스트 불러오기 (완성)
 router.get('/record/:takerId/:date', (req, res) => {
     taker.record(req,res);
+});
+
+// 보호자 등록
+router.post('/input-protector/:takerId', (req, res) => {
+    taker.inputProtector(req, res);
 });
 
 module.exports = router;

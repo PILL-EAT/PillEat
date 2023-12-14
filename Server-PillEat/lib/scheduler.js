@@ -3,7 +3,7 @@ const schedule = require('node-schedule');
 const db = require('./db');
 
 function setupScheduler() {
-    const Schedule = schedule.scheduleJob('0 0 * * *', () => {
+    const Schedule = schedule.scheduleJob('1 0 * * *', () => {
         var currentDate = new Date();
         var dayOfWeek = currentDate.getDay();
         dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
