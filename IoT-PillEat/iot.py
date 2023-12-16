@@ -116,5 +116,13 @@ async def main():
 
         await asyncio.gather(listener_task)
         
+        if GPIO.input(15) == GPIO.HIGH: # 버튼이 눌리면 약을 통 안의 심에 감는다
+            print("약 감기")
+            while True:
+                motor.backward(speed = 1) # 약이 다 감겼다고 사용자가 생각하여 버튼을 누르면 약 감기 멈춤
+                if GPIO.input(15) == GPIO.LOW:
+                    motor.stop()
+                    break
+            
 if __name__ == "__main__":
     asyncio.run(main())
