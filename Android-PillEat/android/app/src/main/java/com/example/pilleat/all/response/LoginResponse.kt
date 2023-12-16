@@ -13,6 +13,6 @@ data class LoginResponse(
 
 data class Result(
     @SerializedName("userId") val userId: Int,
-    @SerializedName("clientId") val clientId: Int,
-    @SerializedName("type") val type: String
+    @SerializedName("type") val type: String,
+    @SerializedName("takerId") val takerId: Int
 )

@@ -3,6 +3,7 @@ package com.example.pilleat
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -11,6 +12,8 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import org.json.JSONException
+import org.json.JSONObject
 
 
 const val CHANNEL_ID = "PILLEAT"
@@ -54,7 +57,19 @@ class WebSocketManager private constructor(private val context: Context) {
             Log.d("SOCKET-GET", text)
             println(text)
             // 메시지 수신 시의 동작
-            //showNotification(text)
+
+            try {
+                val json = JSONObject(text)
+                val type = json.getString("type")
+                val message = json.getString("message")
+
+                if(type == "finish") {
+                    showNotification(type, message)
+                }
+
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
@@ -69,7 +84,7 @@ class WebSocketManager private constructor(private val context: Context) {
             // 연결 실패 시의 동작
         }
 
-        private fun showNotification(message: String) {
+        private fun showNotification(type: String, message: String) {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -87,17 +102,9 @@ class WebSocketManager private constructor(private val context: Context) {
                 .setContentText(message)
                 .setSmallIcon(R.drawable.logo_img)
                 .setAutoCancel(true)
-                .setTimeoutAfter(8000)
 
             notificationManager.notify(1, notificationBuilder.build())
             Log.d("알림창 구현", message)
         }
     }
-//
-//    private fun createJsonData(): JSONObject {
-//        val jsonData = JSONObject()
-//        jsonData.put("type", "string") // 원하는 키-값 쌍을 추가할 수 있습니다.
-//        jsonData.put("message", "엽떡먹고싶음")
-//        return jsonData
-//    }
 }

@@ -2,79 +2,36 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/back_green"
-    android:padding="10dp"
-    android:layout_width="wrap_content"
+    android:id="@+id/dialog_enroll_iot_lo"
+    android:background="@color/white"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/main_taker_dl_on_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="블루투스 켜기"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:textSize="16dp"
-        android:background="@drawable/main_btn"
-        android:layout_marginHorizontal="30dp"
-        app:layout_constraintVertical_bias="0.03"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/main_taker_dl_off_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="블루투스 끄기"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:textSize="16dp"
-        android:background="@drawable/main_btn"
-        android:layout_marginTop="30dp"
-        app:layout_constraintBottom_toTopOf="@id/main_taker_dl_connect_btn"
-        app:layout_constraintTop_toBottomOf="@id/main_taker_dl_on_btn"
-        app:layout_constraintStart_toStartOf="@id/main_taker_dl_on_btn"
-        app:layout_constraintEnd_toEndOf="@id/main_taker_dl_on_btn" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/main_taker_dl_connect_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="페어링"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:textSize="16dp"
-        android:background="@drawable/main_btn"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="25dp"
-        app:layout_constraintTop_toBottomOf="@id/main_taker_dl_off_btn"
-        app:layout_constraintStart_toStartOf="@id/main_taker_dl_off_btn"
-        app:layout_constraintEnd_toEndOf="@id/main_taker_dl_off_btn"
-        app:layout_constraintBottom_toBottomOf="@id/main_taker_dl_connect_tv"/>
-
     <TextView
-        android:id="@+id/main_taker_dl_connect_tv"
+        android:id="@+id/dialog_enroll_iot_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="페어링된 목록"
-        android:textSize="20dp"
+        android:text="기기의 코드를 입력해주세요."
         android:textStyle="bold"
         android:textColor="@color/black"
+        android:textSize="20dp"
         android:fontFamily="@font/main_font"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="@id/main_taker_dl_connect_btn"
-        app:layout_constraintTop_toBottomOf="@id/main_taker_dl_connect_btn"/>
-
-    <ListView
-        android:id="@+id/main_taker_dl_connect_lv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/item_bluetooth"
+        android:gravity="center_horizontal"
+        android:paddingVertical="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_taker_dl_connect_tv"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
+    <EditText
+        android:id="@+id/dialog_enroll_iot_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_edittext"
+        android:hint="예) 2XTV6D"
+        android:paddingStart="10dp"
+        android:layout_marginHorizontal="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_enroll_iot_tv"
+        app:layout_constraintStart_toStartOf="@id/dialog_enroll_iot_tv"
+        app:layout_constraintEnd_toEndOf="@id/dialog_enroll_iot_tv"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

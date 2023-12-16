@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val BASE_URL = "http://ceprj.gachon.ac.kr:60013" // url
+const val BASE_URL = "http://ceprj.gachon.ac.kr:60037" // url
 const val OPEN_API_BASE_URL = "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/"
 
 fun getRetrofit(): Retrofit {

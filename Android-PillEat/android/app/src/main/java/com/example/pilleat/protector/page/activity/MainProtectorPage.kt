@@ -3,6 +3,7 @@ package com.example.pilleat.protector.page.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -33,6 +34,8 @@ class MainProtectorPage: AppCompatActivity(){
         binding.mainProtectorHomeBtn.setOnClickListener {
             val intent = Intent(this@MainProtectorPage, HomeProtectorPage::class.java)
             intent.putExtra("protectorId", getData())
+            intent.putExtra("getTakerId", getTakerId())
+            Log.d("mainmainmianmain", getData().toString() + " " + getTakerId().toString())
             startActivity(intent)
         }
 
@@ -51,6 +54,12 @@ class MainProtectorPage: AppCompatActivity(){
     private fun getData(): Int {
         val getIntent = intent
         val getData = getIntent.getIntExtra("protectorId", 0)
+        return getData
+    }
+
+    private fun getTakerId() : Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("getTakerId", 0)
         return getData
     }
 

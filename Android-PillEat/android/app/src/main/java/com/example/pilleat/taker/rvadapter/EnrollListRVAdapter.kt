@@ -54,7 +54,14 @@ class EnrollListRVAdapter() : RecyclerView.Adapter<EnrollListRVAdapter.ViewHolde
         holder.pill_kind.text = result[position].category
         holder.alert_day.text = result[position].day
         holder.alert_time.text = result[position].time
-        holder.iot.text = result[position].iot.toString()
+
+        //if(result[position].day == "0000000")
+
+        if(result[position].iot.toString() == "0") {
+            holder.iot.text = "미등록"
+        } else {
+            holder.iot.text = "등록"
+        }
         holder.binding.enrollRemoveBtn.setOnClickListener {
             mItemClickListener.onItemRemove(result[position])
             result.removeAt(position)

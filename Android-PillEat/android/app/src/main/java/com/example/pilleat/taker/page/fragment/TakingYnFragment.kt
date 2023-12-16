@@ -40,6 +40,9 @@ class TakingYnFragment: Fragment(), EnrollRecordView {
         binding = FragmentTakingynBinding.inflate(inflater, container, false)
         updateDate()
 
+        val userId = arguments?.getInt("protectorId", 0)
+        Log.d("sdjfldshfjosdhofhesifk", "UserId: $userId")
+
         binding.takingynBeforeBtn.setOnClickListener {
             // 어제 날짜로 이동
             calendar.add(Calendar.DAY_OF_YEAR, -1)
@@ -64,31 +67,54 @@ class TakingYnFragment: Fragment(), EnrollRecordView {
     }
 
     private fun getUserId(): Int {
-        val userId = arguments?.getInt("userId", 0)!!
-        return userId
+        val userId = arguments?.getInt("userId", 0)
+        Log.d("Debug", "UserId: $userId")
+        return userId ?: 0
     }
 
     private fun getUserId2(): Int {
-        val userId = arguments?.getInt("userIdx", 0)!!
-        return userId
+        val userId = arguments?.getInt("userIdx", 0)
+        Log.d("Debug", "UserId: $userId")
+        return userId ?: 0
     }
 
-    private fun getUserId3(): Int {
-        val userId = arguments?.getInt("clientId", 0)!!
-        return userId
-    }
+//    private fun getTakerId(): Int {
+//        val userId = arguments?.getInt("takerId", 0)
+//        Log.d("Debug", "UserId: $userId")
+//        return userId ?: 0
+//    }
 
     private fun getData() {
         val current: String = SimpleDateFormat(format_yyyyMMdd, Locale.getDefault()).format(calendar.time)
         val enrollRecordService = EnrollRecordService()
         enrollRecordService.setEnrollRecordView(this@TakingYnFragment)
 
-        if(getUserId() == 0) {
+//        if(getUserId() == 0) {
+//            if(getUserId2() == 0) {
+//                enrollRecordService.enrollRecord(getTakerId(), current)
+//            } else {
+//                enrollRecordService.enrollRecord(getUserId2(), current)
+//            }
+//        } else if(getUserId2() == 0) {
+//            if(getUserId() == 0) {
+//                enrollRecordService.enrollRecord(getTakerId(), current)
+//            } else {
+//                enrollRecordService.enrollRecord(getUserId(), current)
+//            }
+//        } else {
+//            if(getUserId() == 0) {
+//                enrollRecordService.enrollRecord(getUserId2(), current)
+//            } else {
+//                enrollRecordService.enrollRecord(getUserId(), current)
+//            }
+//        }
+
+        if(getUserId() == 0){
             enrollRecordService.enrollRecord(getUserId2(), current)
         } else {
             enrollRecordService.enrollRecord(getUserId(), current)
-            Log.d("TAKE", getUserId().toString() + " " + current)
         }
+
     }
 
     private fun updateDate() {

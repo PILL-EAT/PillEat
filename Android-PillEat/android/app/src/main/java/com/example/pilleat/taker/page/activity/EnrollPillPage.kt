@@ -14,7 +14,6 @@ import com.example.pilleat.taker.table.EnrollPill
 import com.example.pilleat.taker.table.Times
 import com.example.pilleat.taker.view.EnrollPillView
 import retrofit2.Response
-import java.util.Collections
 
 class EnrollPillPage: AppCompatActivity(), EnrollPillView{
     private lateinit var binding: ActivityEnrollBinding
@@ -157,6 +156,7 @@ class EnrollPillPage: AppCompatActivity(), EnrollPillView{
     }
 
     override fun onEnrollPillFailure(response: Response<EnrollPillResponse>) {
-        Toast.makeText(this@EnrollPillPage, response.message(), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@EnrollPillPage, response.body()!!.message, Toast.LENGTH_SHORT).show()
+        Log.d("IOT_중복", response.body()!!.message)
     }
 }

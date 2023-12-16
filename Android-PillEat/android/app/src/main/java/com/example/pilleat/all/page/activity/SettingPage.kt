@@ -41,14 +41,14 @@ class SettingPage: AppCompatActivity(), UserDeleteView {
     private fun getData(): Int {
         val getIntent = intent
         val getData = getIntent.getIntExtra("takerId", 0)
-        Log.d("ID", getData.toString())
+        Log.d("SettingPage-takerId", getData.toString())
         return getData
     }
 
     private fun getData2(): Int {
         val getIntent = intent
         val getData = getIntent.getIntExtra("protectorId", 0)
-        Log.d("ID", getData.toString())
+        Log.d("SettingPage-protectorId", getData.toString())
         return getData
     }
 
@@ -90,12 +90,12 @@ class SettingPage: AppCompatActivity(), UserDeleteView {
 
     override fun onDeleteSuccess(code: Int) {
         Toast.makeText(this@SettingPage, "탈퇴 처리되었습니다.", Toast.LENGTH_SHORT).show()
-        Log.d("SettingPage-DELETE-SUCCESS", code.toString())
+        Log.d("USER-DELETE-SUCCESS", code.toString())
         val intent = Intent(this@SettingPage, StartPage::class.java)
         startActivity(intent)
     }
 
     override fun onDeleteFailure(response: Response<UserResponse>) {
-        Log.d("SettingPage-DELETE-FAILURE", response.message())
+        Log.d("USER-DELETE-FAILURE", response.message())
     }
 }

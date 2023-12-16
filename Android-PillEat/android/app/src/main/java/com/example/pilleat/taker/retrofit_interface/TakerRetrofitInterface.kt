@@ -4,6 +4,7 @@ import com.example.pilleat.protector.response.SetTakerResponse
 import com.example.pilleat.taker.response.EnrollPillListResponse
 import com.example.pilleat.taker.response.EnrollPillResponse
 import com.example.pilleat.taker.response.EnrollRecordResponse
+import com.example.pilleat.taker.table.EnrollDevice
 import com.example.pilleat.taker.table.EnrollPill
 import com.example.pilleat.taker.table.PhoneNumber
 import retrofit2.Call
@@ -30,11 +31,11 @@ interface TakerRetrofitInterface {
     @GET("taker/record/{takerId}/{date}")
     fun getRecord(@Path("takerId") takerId: Int, @Path("date") date: String): Call<EnrollRecordResponse>
 
-    // 복용 미완료 요청
-    @GET("taker/drug/finish-no/{userId}")
-    fun getNotFinish(@Path("userId") userId: Int): Call<EnrollPillResponse>
-
     // 보호자 등록
     @POST("taker/input-protector/{takerId}")
     fun setTaker(@Body phone: PhoneNumber, @Path("takerId") takerId: Int): Call<SetTakerResponse>
+
+    // IoT 기기 등록
+    @POST("taker/input-iot/{takerId}")
+    fun setIotDevice(@Body enrollDevice: EnrollDevice, @Path("takerId") takerId: Int): Call<EnrollPillResponse>
 }

@@ -35,7 +35,7 @@ class UpdatePage: AppCompatActivity(), UserReadView, UserUpdateView {
     private fun getUserId(): Int {
         val getIntent = intent
         val getData = getIntent.getIntExtra("userId", 0)
-        Log.d("IDIDID", getData.toString())
+        Log.d("UpdatePage-userId", getData.toString())
         return getData
     }
 

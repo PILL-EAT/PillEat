@@ -21,7 +21,7 @@ data class Body(
 
 data class ItemResult(
     @SerializedName("entpName") val entpName: String,
-    @SerializedName("itemName") val itemName: String,
+    @SerializedName("itemName") val itemName: String = "",
     @SerializedName("itemSeq") val itemSeq: String,
     @SerializedName("efcyQesitm") val efcyQesitm: String,
     @SerializedName("useMethodQesitm") val useMethodQesitm: String,

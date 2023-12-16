@@ -13,9 +13,11 @@ import com.example.pilleat.R
 import com.example.pilleat.WebSocketManager
 import com.example.pilleat.databinding.ItemTakingynBinding
 import com.example.pilleat.taker.response.EnrollRecordResponse
-import com.example.pilleat.taker.response.PillList
 import com.example.pilleat.taker.response.RecordResult
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class TakingYnRVAdapter(val result: EnrollRecordResponse): RecyclerView.Adapter<TakingYnRVAdapter.ViewHolder>() {
 
@@ -49,6 +51,12 @@ class TakingYnRVAdapter(val result: EnrollRecordResponse): RecyclerView.Adapter<
     override fun onBindViewHolder(holder: TakingYnRVAdapter.ViewHolder, position: Int) {
         holder.name.text = result.result.list[position].name
         holder.time.text = result.result.list[position].time
+
+        if (isCurrentTimeMatched(position)) {
+            // 현재 시간이 takingynTime과 일치하면 서버에 웹소켓 메시지 전송
+            sendToServer(holder.context, result.result.list[position].userId, result.result.list[position].drugId)
+        }
+
         if(result.result.list[position].iot == 1) {
             holder.binding.takingynDataLo.setBackgroundResource(R.drawable.sub_edittext)
             holder.button.isEnabled = false
@@ -94,5 +102,15 @@ class TakingYnRVAdapter(val result: EnrollRecordResponse): RecyclerView.Adapter<
         jsonData.put("clientId", userId) // 클릭된 아이템의 id 또는 필요한 데이터를 전송
         jsonData.put("drugId", drugId)
         return jsonData
+    }
+
+    private fun isCurrentTimeMatched(position: Int): Boolean {
+        // 현재 시간을 항목의 시간과 비교
+        return if (position >= 0 && position < result.result.list.size) {
+            val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Calendar.getInstance().time)
+            currentTime == result.result.list[position].time
+        } else {
+            false
+        }
     }
 }
