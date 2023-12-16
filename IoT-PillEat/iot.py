@@ -2,7 +2,7 @@ import json
 import asyncio
 import websockets
 import RPi.GPIO as GPIO
-from gpiozero import Robot
+from gpiozero import Motor
 import threading
 import time
 
@@ -13,6 +13,7 @@ GPIO.setup(25, GPIO.OUT) # 부저
 GPIO.setup(15, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # 버튼 눌리면 on
 GPIO.setup(23, GPIO.OUT) # Trig = 23 초음파 신호 전송핀
 GPIO.setup(24, GPIO.IN)  # Echo = 24 초음파 수신하는 수신 핀
+motor = Motor(21, 25)
 
 def led_on(): #LED 켜는 함수 생성
     try:
@@ -80,11 +81,10 @@ async def ws_listener(ws):
                 print(distance)
                 print("약 내보내기")
                 status = "" # 상태 초기화
-                #motor = Robot(left=(20, 21), right=(19, 26))
-                #motor.forward(speed=1) # 이건 속도 (0~1) 사이의 값으로 설정
+                motor.forward(speed=1) # 이건 속도 (0~1) 사이의 값으로 설정
                
                 while distance < 10:
-                    #motor.stop()
+                    motor.stop()
                     # 약 내보내고 나면 led 켜진 후 부저 울림
                     distance = measure_distance()
                     led_on()
@@ -101,7 +101,6 @@ async def ws_listener(ws):
         if data.get("type") == "takePill": # 약 미리 내보낼 때
             while True:
                 distance = measure_distance()
-                motor = Robot(left=(20, 21), right=(19, 26))
                 motor.forward(speed = 1)  # 이건 속도 (0~1) 사이의 값으로 설정
                 if distance < 10: #거리가 10보댜 작으면 약 출력 완료로 판단 모터 멈춤
                     motor.stop()
@@ -116,6 +115,6 @@ async def main():
         listener_task = asyncio.create_task(ws_listener(ws))
 
         await asyncio.gather(listener_task)
-
+        
 if __name__ == "__main__":
     asyncio.run(main())
