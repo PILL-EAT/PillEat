@@ -72,9 +72,15 @@ async def ws_listener(ws):
         on_message(message)
         
         data = json.loads(message)
-        if data.get("type") == "timeToPill":
-            print("led_on")
-            GPIO.output(16, True)
+        if data.get("type") == "timeToPill": # 서버를 통해 timeToPill이라는 메세지를 받음
+            while True:
+                distance = measure_distance()
+                motor = Robot(left=(20, 21), right=(19, 26))
+                motor.forward(speed = 1)  # 이건 속도 (0~1) 사이의 값으로 설정
+                if distance == 1: # 초음파 센서를 이용하여 측정할 예정이며 약통이 정확히 만들어지면 거리 제대로 측정하여 수정
+                    motor.stop()
+                    print("약 출력 완료")
+                    return("pill")
 
 async def main():
     server_address = "ws://ceprj.gachon.ac.kr:60037/ws"
