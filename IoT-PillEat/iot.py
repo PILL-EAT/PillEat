@@ -6,6 +6,7 @@ from gpiozero import Robot
 import threading
 import time
 
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(16, GPIO.OUT) # LED
 GPIO.setup(25, GPIO.OUT) # 부저
@@ -91,6 +92,14 @@ async def ws_listener(ws):
                     print("약 복용 완료")
                     await user_input(ws)  # 서버에 약 복용 완료 메시지 전송
                     break
+                
+        if data.get("type") == "takePill": # 약 미리 내보낼 때
+            while True:
+                distance = measure_distance()
+                motor = Robot(left=(20, 21), right=(19, 26))
+                motor.forward(speed = 1)  # 이건 속도 (0~1) 사이의 값으로 설정
+                if distance == 1: # 초음파 센서를 이용하여 측정할 예정이며 약통이 정확히 만들어지면 거리 제대로 측정하여 수정
+                    motor.stop()
                 
 
 async def main():
