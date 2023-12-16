@@ -80,7 +80,18 @@ async def ws_listener(ws):
                 if distance == 1: # 초음파 센서를 이용하여 측정할 예정이며 약통이 정확히 만들어지면 거리 제대로 측정하여 수정
                     motor.stop()
                     print("약 출력 완료")
-                    return("pill")
+                    
+                ledOn_Thread.start()  # LED 켜기
+                buzzerOn_Thred.start()  # 부저 울리기
+                
+                if distance >= 3:  # 거리가 3 이상이면 약 복용 완료
+                    motor.stop()
+                    ledOn_Thread.stop()  # LED 멈추기
+                    buzzerOn_Thred.stop()  # 부저 멈추기
+                    print("약 복용 완료")
+                    await user_input(ws)  # 서버에 약 복용 완료 메시지 전송
+                    break
+                
 
 async def main():
     server_address = "ws://ceprj.gachon.ac.kr:60037/ws"
