@@ -6,6 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/home_back_btn"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:background="@drawable/arrow_icon"-->
+<!--        android:layout_margin="10dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"/>-->
+
     <FrameLayout
         android:id="@+id/main_frm"
         android:layout_width="match_parent"

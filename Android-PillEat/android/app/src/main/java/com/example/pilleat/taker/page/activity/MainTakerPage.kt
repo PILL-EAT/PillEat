@@ -82,9 +82,11 @@ class MainTakerPage : AppCompatActivity(), SetTakerView, SetTakerDialog.SetTaker
                 val userInput = inputText.text.toString()
                 val phone = PhoneNumber(userInput)
                 Log.d("text", userInput)
-                if(getData() == 0) {
+                if(getData() == 0 || getData2() == 0) {
+                    setTaker(phone, getData4())
+                } else if(getData() == 0 || getData4() == 0) {
                     setTaker(phone, getData2())
-                } else {
+                } else if(getData2() == 0 || getData4() == 0) {
                     setTaker(phone, getData())
                 }
             }
@@ -106,9 +108,11 @@ class MainTakerPage : AppCompatActivity(), SetTakerView, SetTakerDialog.SetTaker
                 val userInput = inputText.text.toString()
                 val iotCode = EnrollDevice(userInput)
                 Log.d("IOT-CODE", iotCode.toString())
-                if(getData() == 0) {
+                if(getData() == 0 || getData2() == 0) {
+                    setIotDevice(iotCode, getData4())
+                } else if(getData() == 0 || getData4() == 0) {
                     setIotDevice(iotCode, getData2())
-                } else {
+                } else if(getData2() == 0 || getData4() == 0) {
                     setIotDevice(iotCode, getData())
                 }
             }
@@ -137,23 +141,122 @@ class MainTakerPage : AppCompatActivity(), SetTakerView, SetTakerDialog.SetTaker
         return getData
     }
 
+    private fun getData4(): Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("homeToMain", 0)
+        return getData
+    }
+
+    private fun getTakerType(): String {
+        val getIntent = intent
+        val getData = getIntent.getStringExtra("takerType")!!
+        return getData
+    }
+
+//    private fun getTakerType2(): String {
+//        val getIntent = intent
+//        val getData = getIntent.getStringExtra("takerType2")!!
+//        return getData
+//    }
+
     private fun sendData() {
         val intent = Intent(this@MainTakerPage, EnrollPillPage::class.java)
-        intent.putExtra("takerId", getData())
+
+        if(getData() == 0) {
+            if(getData2() == 0) {
+                intent.putExtra("takerId", getData4())
+            } else {
+                intent.putExtra("takerId", getData2())
+            }
+        } else if(getData2() == 0) {
+            if(getData() == 0) {
+                intent.putExtra("takerId", getData4())
+            } else {
+                intent.putExtra("takerId", getData())
+            }
+        } else {
+            if(getData() == 0) {
+                intent.putExtra("takerId", getData2())
+            } else {
+                intent.putExtra("takerId", getData())
+            }
+        }
+//        if(getTakerType() == "taker") {
+//            intent.putExtra("takerType", getTakerType())
+//        } else {
+//            intent.putExtra("takerType", getTakerType2())
+//        }
+        intent.putExtra("takerType", getTakerType())
+
         startActivity(intent)
     }
 
     private fun sendData2() {
         val intent = Intent(this@MainTakerPage, HomeTakerPage::class.java)
-        intent.putExtra("userId", getData())
-        intent.putExtra("userIdx", getData2())
+
+        if(getData() == 0) {
+            if(getData2() == 0) {
+                intent.putExtra("userId", getData4())
+            } else {
+                intent.putExtra("userId", getData2())
+            }
+        } else if(getData2() == 0) {
+            if(getData() == 0) {
+                intent.putExtra("userId", getData4())
+            } else {
+                intent.putExtra("userId", getData())
+            }
+        } else {
+            if(getData() == 0) {
+                intent.putExtra("userId", getData2())
+            } else {
+                intent.putExtra("userId", getData())
+            }
+        }
+
         intent.putExtra("clientId", getData3())
+
+//        Log.d("TYPE", getTakerType() + " " + getTakerType2())
+//        if(getTakerType() == "taker") {
+//            intent.putExtra("takerType", getTakerType())
+//        } else {
+//            intent.putExtra("takerType", getTakerType2())
+//        }
+        intent.putExtra("takerType", getTakerType())
+
         startActivity(intent)
     }
 
     private fun sendData3() {
         val intent = Intent(this@MainTakerPage, SettingPage::class.java)
-        intent.putExtra("takerId", getData())
+
+        if(getData() == 0) {
+            if(getData2() == 0) {
+                intent.putExtra("takerId", getData4())
+            } else {
+                intent.putExtra("takerId", getData2())
+            }
+        } else if(getData2() == 0) {
+            if(getData() == 0) {
+                intent.putExtra("takerId", getData4())
+            } else {
+                intent.putExtra("takerId", getData())
+            }
+        } else {
+            if(getData() == 0) {
+                intent.putExtra("takerId", getData2())
+            } else {
+                intent.putExtra("takerId", getData())
+            }
+        }
+
+//        if(getTakerType() == "taker") {
+//            intent.putExtra("takerType", getTakerType())
+//        } else {
+//            intent.putExtra("takerType", getTakerType2())
+//        }
+        intent.putExtra("takerType", getTakerType())
+
         startActivity(intent)
     }
 

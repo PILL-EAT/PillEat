@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pilleat.R
 import com.example.pilleat.databinding.ItemEnrollBinding
 import com.example.pilleat.manager.response.UserInfo
 import com.example.pilleat.taker.response.Drugs
@@ -18,7 +19,7 @@ class EnrollListRVAdapter() : RecyclerView.Adapter<EnrollListRVAdapter.ViewHolde
     var result = ArrayList<PillList>()
     inner class ViewHolder(val binding: ItemEnrollBinding) : RecyclerView.ViewHolder(binding.root) {
         val pill_name: TextView = binding.enrollNameTv
-        val pill_kind: TextView = binding.enrollCategoryTv
+        //val pill_kind: TextView = binding.enrollCategoryTv
         val alert_day: TextView = binding.enrollDateTv
         val alert_time: TextView = binding.enrollTimeTv
         val iot: TextView = binding.enrollIotTv
@@ -51,11 +52,25 @@ class EnrollListRVAdapter() : RecyclerView.Adapter<EnrollListRVAdapter.ViewHolde
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.pill_name.text = result[position].name
-        holder.pill_kind.text = result[position].category
-        holder.alert_day.text = result[position].day
+        //holder.pill_kind.text = result[position].category
         holder.alert_time.text = result[position].time
 
-        //if(result[position].day == "0000000")
+        // 요일 출력 형식 변경
+        val weekStringBuilder = StringBuilder()
+
+        if (result[position].day[0] == "1") weekStringBuilder.append("월 ")
+        if (result[position].day[1] == "1") weekStringBuilder.append("화 ")
+        if (result[position].day[2] == "1") weekStringBuilder.append("수 ")
+        if (result[position].day[3] == "1") weekStringBuilder.append("목 ")
+        if (result[position].day[4] == "1") weekStringBuilder.append("금 ")
+        if (result[position].day[5] == "1") weekStringBuilder.append("토 ")
+        if (result[position].day[6] == "1") weekStringBuilder.append("일 ")
+
+        holder.alert_day.text = weekStringBuilder.toString().trim()
+
+        if(result[position].iot.toString() == "0") {
+            holder.binding.enrollItemLo.setBackgroundResource(R.color.back_gray)
+        }
 
         if(result[position].iot.toString() == "0") {
             holder.iot.text = "미등록"

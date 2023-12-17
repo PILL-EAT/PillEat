@@ -33,9 +33,14 @@ class MainProtectorPage: AppCompatActivity(){
 
         binding.mainProtectorHomeBtn.setOnClickListener {
             val intent = Intent(this@MainProtectorPage, HomeProtectorPage::class.java)
-            intent.putExtra("protectorId", getData())
+            if(getData() == 0) {
+                intent.putExtra("protectorId", getData2())
+            } else {
+                intent.putExtra("protectorId", getData())
+            }
+
+            intent.putExtra("protectorType", getProtectorType())
             intent.putExtra("getTakerId", getTakerId())
-            Log.d("mainmainmianmain", getData().toString() + " " + getTakerId().toString())
             startActivity(intent)
         }
 
@@ -46,14 +51,31 @@ class MainProtectorPage: AppCompatActivity(){
 
         binding.mainProtectorSettingBtn.setOnClickListener {
             val intent = Intent(this@MainProtectorPage, SettingPage::class.java)
-            intent.putExtra("protectorId", getData())
+            if(getData() == 0) {
+                intent.putExtra("protectorId", getData2())
+            } else {
+                intent.putExtra("protectorId", getData())
+            }
+            intent.putExtra("takerType", getProtectorType())
             startActivity(intent)
         }
+    }
+
+    private fun getProtectorType(): String {
+        val getIntent = intent
+        val getData = getIntent.getStringExtra("protectorType")!!
+        return getData
     }
 
     private fun getData(): Int {
         val getIntent = intent
         val getData = getIntent.getIntExtra("protectorId", 0)
+        return getData
+    }
+
+    private fun getData2(): Int {
+        val getIntent = intent
+        val getData = getIntent.getIntExtra("homeProtectorToMain", 0)
         return getData
     }
 

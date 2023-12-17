@@ -24,7 +24,7 @@ class EnrollPillService {
                 Log.d("약 등록 API", response.toString())
                 val resp: EnrollPillResponse = response.body()!!
                 when(resp.code) {
-                    200 -> enrollPillView.onEnrollPillSuccess()
+                    200 -> enrollPillView.onEnrollPillSuccess(resp)
                     else -> enrollPillView.onEnrollPillFailure(response)
                 }
             }

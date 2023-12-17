@@ -27,15 +27,22 @@ class UpdatePage: AppCompatActivity(), UserReadView, UserUpdateView {
         binding.updateBtn.setOnClickListener {
             updateUserInfo(getUserId())
         }
-        if(binding.protectorPhone.text != "") {
+        if(getTakerType() == "taker") {
             binding.protectorLo.visibility = View.VISIBLE
+        } else {
+            binding.protectorLo.visibility = View.GONE
         }
     }
 
     private fun getUserId(): Int {
         val getIntent = intent
         val getData = getIntent.getIntExtra("userId", 0)
-        Log.d("UpdatePage-userId", getData.toString())
+        return getData
+    }
+
+    private fun getTakerType(): String {
+        val getIntent = intent
+        val getData = getIntent.getStringExtra("takerType")!!
         return getData
     }
 

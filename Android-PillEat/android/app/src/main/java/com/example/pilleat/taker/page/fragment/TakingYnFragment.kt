@@ -1,5 +1,6 @@
 package com.example.pilleat.taker.page.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -40,9 +41,6 @@ class TakingYnFragment: Fragment(), EnrollRecordView {
         binding = FragmentTakingynBinding.inflate(inflater, container, false)
         updateDate()
 
-        val userId = arguments?.getInt("protectorId", 0)
-        Log.d("sdjfldshfjosdhofhesifk", "UserId: $userId")
-
         binding.takingynBeforeBtn.setOnClickListener {
             // 어제 날짜로 이동
             calendar.add(Calendar.DAY_OF_YEAR, -1)
@@ -57,9 +55,15 @@ class TakingYnFragment: Fragment(), EnrollRecordView {
             getData()
         }
 
-        binding.takingynPullBtn.setOnClickListener {
-            // 약 추출
-            Toast.makeText(context, "약이 추출됩니다.", Toast.LENGTH_SHORT).show()
+        if(getTakerType() == "taker") {
+            binding.takingynPullBtn.setOnClickListener {
+                // 약 추출
+                Log.d("USER", getUserId().toString())
+                sendToServer(requireContext(), getUserId())
+//                Toast.makeText(context, "약이 추출됩니다.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            binding.takingynPullBtn.isEnabled = false
         }
 
         getData()
@@ -68,53 +72,20 @@ class TakingYnFragment: Fragment(), EnrollRecordView {
 
     private fun getUserId(): Int {
         val userId = arguments?.getInt("userId", 0)
-        Log.d("Debug", "UserId: $userId")
         return userId ?: 0
     }
-
-    private fun getUserId2(): Int {
-        val userId = arguments?.getInt("userIdx", 0)
-        Log.d("Debug", "UserId: $userId")
-        return userId ?: 0
-    }
-
-//    private fun getTakerId(): Int {
-//        val userId = arguments?.getInt("takerId", 0)
-//        Log.d("Debug", "UserId: $userId")
-//        return userId ?: 0
-//    }
 
     private fun getData() {
         val current: String = SimpleDateFormat(format_yyyyMMdd, Locale.getDefault()).format(calendar.time)
         val enrollRecordService = EnrollRecordService()
         enrollRecordService.setEnrollRecordView(this@TakingYnFragment)
 
-//        if(getUserId() == 0) {
-//            if(getUserId2() == 0) {
-//                enrollRecordService.enrollRecord(getTakerId(), current)
-//            } else {
-//                enrollRecordService.enrollRecord(getUserId2(), current)
-//            }
-//        } else if(getUserId2() == 0) {
-//            if(getUserId() == 0) {
-//                enrollRecordService.enrollRecord(getTakerId(), current)
-//            } else {
-//                enrollRecordService.enrollRecord(getUserId(), current)
-//            }
-//        } else {
-//            if(getUserId() == 0) {
-//                enrollRecordService.enrollRecord(getUserId2(), current)
-//            } else {
-//                enrollRecordService.enrollRecord(getUserId(), current)
-//            }
-//        }
+        enrollRecordService.enrollRecord(getUserId(), current)
+    }
 
-        if(getUserId() == 0){
-            enrollRecordService.enrollRecord(getUserId2(), current)
-        } else {
-            enrollRecordService.enrollRecord(getUserId(), current)
-        }
-
+    fun getTakerType(): String {
+        val takerType = arguments?.getString("takerType")!!
+        return takerType
     }
 
     private fun updateDate() {
@@ -123,7 +94,7 @@ class TakingYnFragment: Fragment(), EnrollRecordView {
     }
 
     private fun initRecyclerView(response: EnrollRecordResponse) {
-        takingYnRVAdapter = TakingYnRVAdapter(response)
+        takingYnRVAdapter = TakingYnRVAdapter(this, response)
         binding.takingynRv.adapter = takingYnRVAdapter
         binding.takingynRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.takingynRv.setHasFixedSize(true)
@@ -135,6 +106,19 @@ class TakingYnFragment: Fragment(), EnrollRecordView {
         })
 
         binding.takingynRv.adapter = takingYnRVAdapter
+    }
+
+    private fun createJsonData(userId: Int): JSONObject {
+        val jsonData = JSONObject()
+        jsonData.put("type", "takePill") // 적절한 type을 설정
+        jsonData.put("clientId", userId) // 클릭된 아이템의 id 또는 필요한 데이터를 전송
+        return jsonData
+    }
+
+    private fun sendToServer(context: Context, userId: Int) {
+        val webSocket = WebSocketManager.getInstance(context).getWebSocket()
+        val jsonData = createJsonData(userId)
+        webSocket.send(jsonData.toString())
     }
 
     override fun onGetRecordSuccess(code: Int, response: EnrollRecordResponse) {

@@ -61,6 +61,7 @@ class LoginPage : AppCompatActivity(), LoginView {
     private fun takerPage(takerResult: Result) {
         val intent = Intent(this@LoginPage, MainTakerPage::class.java)
         intent.putExtra("takerId", takerResult.userId)
+        intent.putExtra("takerType", takerResult.type)
         startActivity(intent)
     }
 
@@ -68,7 +69,7 @@ class LoginPage : AppCompatActivity(), LoginView {
         val intent = Intent(this@LoginPage, MainProtectorPage::class.java)
         intent.putExtra("protectorId", protectorResult.userId)
         intent.putExtra("getTakerId", protectorResult.takerId)
-        Log.d("gettakerid", protectorResult.takerId.toString())
+        intent.putExtra("protectorType", protectorResult.type)
         startActivity(intent)
     }
 

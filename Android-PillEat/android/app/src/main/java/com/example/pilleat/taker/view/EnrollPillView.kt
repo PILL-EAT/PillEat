@@ -4,6 +4,6 @@ import com.example.pilleat.taker.response.EnrollPillResponse
 import retrofit2.Response
 
 interface EnrollPillView {
-    fun onEnrollPillSuccess()
+    fun onEnrollPillSuccess(response: EnrollPillResponse)
     fun onEnrollPillFailure(response: Response<EnrollPillResponse>)
 }

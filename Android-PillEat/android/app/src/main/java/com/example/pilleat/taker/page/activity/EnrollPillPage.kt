@@ -41,7 +41,8 @@ class EnrollPillPage: AppCompatActivity(), EnrollPillView{
 
         binding.enrollBtn.setOnClickListener {
             connectEnroll(enrollPill())
-            goMain()
+            //goMain()
+            finish()
         }
     }
 
@@ -61,7 +62,14 @@ class EnrollPillPage: AppCompatActivity(), EnrollPillView{
     private fun goMain() {
         val intent = Intent(this@EnrollPillPage, MainTakerPage::class.java)
         intent.putExtra("userIdx", getData())
+        intent.putExtra("takerType2", getTakerType())
         startActivity(intent)
+    }
+
+    private fun getTakerType(): String {
+        val getIntent = intent
+        val getData = getIntent.getStringExtra("takerType")!!
+        return getData
     }
 
     private fun enroll() {
@@ -151,8 +159,8 @@ class EnrollPillPage: AppCompatActivity(), EnrollPillView{
         return mon + tue + wed + thu + fri + sat + sun
     }
 
-    override fun onEnrollPillSuccess() {
-        Toast.makeText(this@EnrollPillPage, "등록되었습니다.", Toast.LENGTH_SHORT).show()
+    override fun onEnrollPillSuccess(response: EnrollPillResponse) {
+        Toast.makeText(this@EnrollPillPage, response.message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onEnrollPillFailure(response: Response<EnrollPillResponse>) {
