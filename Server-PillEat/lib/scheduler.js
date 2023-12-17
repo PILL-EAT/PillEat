@@ -16,11 +16,14 @@ function setupScheduler() {
 
         dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
 
+        console.log(date)
+        console.log(dayOfWeek)
+
         var date = currentDate.toISOString().split('T')[0];
-        db.query(`INSERT INTO pill_history (date, pill_alert_id, is_taken)
-            SELECT '${date}' as date, pill_alert_id, false as is_taken
-            FROM pill_alert
-            WHERE SUBSTRING(alert_day, '${dayOfWeek}', 1) = '1';`,
+        db.query(`INSERT INTO pill_history (date, pill_alert_id, taker_id, pill_name, pill_kind, alert_time, alert_day, iotYN, is_taken)
+                SELECT '${date}' as date, pill_alert_id, taker_id, pill_name, pill_kind, alert_time, alert_day, iotYN, false as is_taken
+                FROM pill_alert
+                WHERE SUBSTRING(alert_day, '${dayOfWeek}', 1) = '1';`,
             (err, result) => {
                 if (err) {
                     throw (err);

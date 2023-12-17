@@ -11,7 +11,6 @@ function getCurrentDate() {
     return `${year}-${month}-${day}`;
 }
 
-
 module.exports = {
     enroll: (req, res) => {
         try {
@@ -25,67 +24,89 @@ module.exports = {
             const queryPromises = [];
     
             var date = getCurrentDate();
+
+            // IoT 기기에 이미 등록된 약인지 확인
+            db.query('SELECT pill_name from pill_alert where taker_id = ? and iotYN = 1', [takerId],
+                async (err, iotcheck) => {
+                    if (err) {
+                        const errorResponse = {
+                            isSuccess: false,
+                            code: 600,
+                            message: "요청에 실패하였습니다.",
+                        };
+                        return res.json(errorResponse);
+                    }
     
-            for (let i = 0; i < enrollData.date; i++) {
-                console.log(times['time' + (i + 1)]);
-    
-                // 각 쿼리를 Promise로 감싸고 배열에 추가
-                const queryPromise = new Promise((resolve, reject) => {
-                    db.query(
-                        'INSERT INTO pill_alert (taker_id, pill_name, pill_kind, alert_time, alert_day, iotYN) VALUES(?,?,?,?,?,?)',
-                        [takerId, enrollData.name, enrollData.category, times['time' + (i + 1)], enrollData.day, enrollData.iot],
-                        (err, result) => {
-                            if (err) {
-                                const errorResponse = {
-                                    isSuccess: false,
-                                    code: 600,
-                                    message: "요청에 실패하였습니다.",
-                                };
-                                reject(errorResponse);
-                            } else {
-                                const pillAlertId = result.insertId;
-                                db.query('INSERT INTO pill_history (date, pill_alert_id, is_taken) VALUES(?,?,?)',
-                                    [date, pillAlertId, 0], (err, result2) => {
-                                        if (err) {
-                                            const errorResponse = {
-                                                isSuccess: false,
-                                                code: 600,
-                                                message: "요청에 실패하였습니다.",
-                                            };
-                                            reject(errorResponse);
-                                        } else {
-                                            resolve(result);
-                                        }
-                                    });
-                            }
-                        }
-                    );
-                });
-    
-                queryPromises.push(queryPromise);
-            }
-    
-            // 모든 Promise가 완료될 때까지 대기
-            Promise.all(queryPromises)
-                .then(results => {
-                    const responseData = {
-                        isSuccess: true,
-                        code: 200,
-                        message: "요청에 성공하였습니다.",
-                        results: results,
-                    };
-                    res.json(responseData);
+                    if (enrollData.iot === 1 && iotcheck.length > 0 && enrollData.name !== iotcheck[0].pill_name) {
+                        console.log("이미 기기에 등록된 약이 있습니다.")
+                        const errorResponse = {
+                            isSuccess: false,
+                            code: 600,
+                            message: "이미 기기에 등록된 약이 있습니다.",
+                        };
+                        return res.json(errorResponse);
+                    }
+
+                    for (let i = 0; i < enrollData.date; i++) {
+                        console.log(times['time' + (i + 1)]);
+            
+                        // 각 쿼리를 Promise로 감싸고 배열에 추가
+                        const queryPromise = new Promise((resolve, reject) => {
+                            db.query(
+                                'INSERT INTO pill_alert (taker_id, pill_name, pill_kind, alert_time, alert_day, iotYN) VALUES(?,?,?,?,?,?)',
+                                [takerId, enrollData.name, enrollData.category, times['time' + (i + 1)], enrollData.day, enrollData.iot],
+                                (err, result) => {
+                                    if (err) {
+                                        const errorResponse = {
+                                            isSuccess: false,
+                                            code: 600,
+                                            message: "요청에 실패하였습니다.",
+                                        };
+                                        reject(errorResponse);
+                                    } else {
+                                        const pillAlertId = result.insertId;
+                                        db.query('INSERT INTO pill_history (date, pill_alert_id, taker_id, pill_name, pill_kind, alert_time, alert_day, iotYN, is_taken) VALUES(?,?,?,?,?,?,?,?,?)',
+                                                [date, pillAlertId, takerId, enrollData.name, enrollData.category, times['time' + (i + 1)], enrollData.day, enrollData.iot, 0], 
+                                                (err, result2) => {
+                                                if (err) {
+                                                    const errorResponse = {
+                                                        isSuccess: false,
+                                                        code: 600,
+                                                        message: "요청에 실패하였습니다.",
+                                                    };
+                                                    reject(errorResponse);
+                                                } else {
+                                                    resolve(result);
+                                                }
+                                            });
+                                    }
+                                }
+                            );
+                        });
+            
+                        queryPromises.push(queryPromise);
+                    }
+                    // 모든 Promise가 완료될 때까지 대기
+                    Promise.all(queryPromises)
+                    .then(results => {
+                        const responseData = {
+                            isSuccess: true,
+                            code: 200,
+                            message: "요청에 성공하였습니다.",
+                            results: results,
+                        };
+                        res.json(responseData);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        const errorResponse = {
+                            isSuccess: false,
+                            code: 600,
+                            message: "요청에 실패하였습니다.",
+                        };
+                        res.json(errorResponse);
+                    });
                 })
-                .catch(error => {
-                    console.error(error);
-                    const errorResponse = {
-                        isSuccess: false,
-                        code: 600,
-                        message: "요청에 실패하였습니다.",
-                    };
-                    res.json(errorResponse);
-                });
-    
         } catch (error) {
             console.error(error);
             const errorResponse = {
@@ -96,8 +117,6 @@ module.exports = {
             res.json(errorResponse);
         }
     },
-    
-    
 
     //등록한 약 목록 불러오기
     enrollList: (req, res) => {
@@ -128,12 +147,16 @@ module.exports = {
                     };
                     return res.json(responseData);
                 }
+                // 요일 데이터를 리스트 형태로 변환
+                const alertDayString = resultItem.alert_day
+                const alertDayArray = alertDayString.split('').map(Number);
+
                 const drugs = result.map(resultItem => ({
                     drugId: resultItem.pill_alert_id,
                     name: resultItem.pill_name,
                     category: resultItem.pill_kind,
                     time: resultItem.alert_time,
-                    day: resultItem.alert_day,
+                    day: alertDayArray,
                     iot: resultItem.iotYN
                 }));
     
@@ -157,10 +180,11 @@ module.exports = {
 
         console.log(`enrollDelete, drugId: ${drugId}`)
         
-        query1 = 'DELETE FROM pill_alert WHERE pill_alert_id = ?;';
-        query2 = 'DELETE FROM pill_history WHERE pill_alert_id = ? AND date = ?;';
+        query1 = 'DELETE FROM pill_history WHERE pill_alert_id = ? AND date = ?;';
+        query2 = 'DELETE FROM pill_alert WHERE pill_alert_id = ?;';
+        
         // user 테이블에서 삭제
-        db.query(query1+query2, [drugId, drugId, date], (err, result) => {
+        db.query(query1+query2, [drugId, date, drugId, ], (err, result) => {
             if (err) {
                 const responseData = {
                     isSuccess: false,
@@ -186,10 +210,7 @@ module.exports = {
 
         console.log(`drug-list takerId = ${takerId}, date = ${date}`)
 
-        db.query(`SELECT *
-                FROM pill_history
-                LEFT JOIN pill_alert ON pill_history.pill_alert_id = pill_alert.pill_alert_id
-                WHERE pill_alert.taker_id = ? AND pill_history.date = ? ORDER BY alert_time ASC;`, 
+        db.query(`SELECT * FROM pill_history WHERE taker_id = ? AND date = ? ORDER BY alert_time ASC;`, 
                 [takerId, date], (err, result) => {
             if (err) {
                 console.log(err)
@@ -267,6 +288,44 @@ module.exports = {
                     };
                     return res.json(responseData);
                 }
+            }
+        });
+    },
+
+    // ioT기기 등록
+    inputIoT: (req, res) => {
+        var takerId = req.params.takerId;
+        var inputData = req.body;
+        console.log(`inputIoT ${takerId} ${inputData}`);
+
+        console.log(inputData.iotCode)
+
+        // 전화번호 중복 확인 - user 테이블
+        db.query('SELECT * FROM iot WHERE iot_code = ?', [inputData.iotCode], (err, result) => {
+            if (err) {
+                throw err;
+            }
+            if (result.length === 0) {
+                // 전화번호가 일치하는 유저가 없다면
+                const responseData = {
+                    isSuccess: false,
+                    code: 2017,
+                    message: "올바른 code를 입력해주세요.",
+                };
+                return res.json(responseData);
+            } else {
+                // 해당 사용자에 iot 기기 등록
+                    db.query('UPDATE user SET iot_id = ? WHERE user_id = ?', [result[0].iot_id, takerId], (err, updateResult) => {
+                        if (err) {
+                            throw err;
+                        }
+                        const responseData = {
+                            isSuccess: true,
+                            code: 1000,
+                            message: "요청에 성공하였습니다.",
+                        };
+                        return res.json(responseData);
+                    });
             }
         });
     }

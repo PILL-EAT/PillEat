@@ -5,7 +5,7 @@ module.exports = {
     login: (req, res) => {
         var loginData = req.body;
         console.log('userLogin:', loginData);
-    
+
         // user 테이블에서 로그인 확인
         db.query('SELECT * FROM user WHERE user_email = ? AND user_password = ?',
             [loginData.email, loginData.password], (err, result) => {
@@ -17,7 +17,8 @@ module.exports = {
                         message: "요청에 실패하였습니다.",
                         result: {
                             userId: null,
-                            type: null
+                            type: null,
+                            takerId: null
                         }
                     };
                     res.json(responseData);
@@ -29,25 +30,65 @@ module.exports = {
                         message: "일치하는 사용자가 없습니다. 로그인에 실패하였습니다.",
                         result: {
                             userId: null,
-                            type: null
+                            type: null,
+                            takerId: null
                         }
                     };
                     res.json(responseData);
                 } else {
-                    // 로그인 성공
-                    const responseData = {
-                        isSuccess: true,
-                        code: 1000,
-                        message: "요청에 성공하였습니다.",
-                        result: {
-                            userId: result[0].user_id,
-                            type: result[0].user_type  // user_type에 따라 "taker" or "protector" or "manager"
-                        }
-                    };
-                    res.json(responseData);
+                    if (result[0].user_type === 'taker') {
+                        // 로그인 성공
+                        const responseData = {
+                            isSuccess: true,
+                            code: 1000,
+                            message: "요청에 성공하였습니다.",
+                            result: {
+                                userId: result[0].user_id,
+                                type: result[0].user_type,  // user_type에 따라 "taker" or "protector" or "manager"
+                                takerId: null
+                            }
+                        };
+                        res.json(responseData);
+                    } else if (result[0].user_type === 'protector') {
+                        // 로그인 성공 (프로텍터)
+                        db.query('SELECT * from user where protector_id = ?',[result[0].user_id], (err,result2)=>{
+                            if(result2.length === 0){
+                                const responseData = {
+                                    isSuccess: true,
+                                    code: 1000,
+                                    message: "요청에 성공하였습니다.",
+                                    result: {
+                                        userId: result[0].user_id,
+                                        type: result[0].user_type,
+                                        takerId: 2
+                                    }
+                                };
+    
+                                console.log(result[0].user_id)
+                                res.json(responseData);
+                            }
+                            else{
+                                const responseData = {
+                                    isSuccess: true,
+                                    code: 1000,
+                                    message: "요청에 성공하였습니다.",
+                                    result: {
+                                        userId: result[0].user_id,
+                                        type: result[0].user_type,
+                                        takerId: result2[0].user_id
+                                    }
+                                };
+    
+                                console.log(result[0].user_id)
+                                res.json(responseData);
+                            }
+                            
+                        })
+                    }
                 }
             });
     },
+
     
 
     logout: (req,res) => {

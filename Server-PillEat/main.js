@@ -48,19 +48,21 @@ app.listen(port,'0.0.0.0', () => {
 
     var date = `${year}-${month}-${day}`;
         
-        db.query(`DELETE FROM pill_history WHERE date = ?`,[date], (err, result)=>{
+        db.query(`SELECT * FROM pill_history WHERE date = ?`,[date], (err, result)=>{
             if (err){
                 throw(err)
             }
-            db.query(`INSERT INTO pill_history (date, pill_alert_id, is_taken)
-            SELECT '${date}' as date, pill_alert_id, false as is_taken
-            FROM pill_alert
-            WHERE SUBSTRING(alert_day, '${dayOfWeek}', 1) = '1';`,
-            (err,result)=>{
-                if (err){
-                    throw(err)
-                }
-            })
+            if(result.length === 0){
+                db.query(`INSERT INTO pill_history (date, pill_alert_id, taker_id, pill_name, pill_kind, alert_time, alert_day, iotYN, is_taken)
+                SELECT '${date}' as date, pill_alert_id, taker_id, pill_name, pill_kind, alert_time, alert_day, iotYN, false as is_taken
+                FROM pill_alert
+                WHERE SUBSTRING(alert_day, '${dayOfWeek}', 1) = '1';`,
+                (err,result)=>{
+                    if (err){
+                        throw(err)
+                    }
+                })
+            }  
         })
     console.log(`Server is running at http://ceprj.gachon.ac.kr:${port}`);
 });

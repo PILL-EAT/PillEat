@@ -29,4 +29,9 @@ router.post('/input-protector/:takerId', (req, res) => {
     taker.inputProtector(req, res);
 });
 
+// 기기 등록
+router.post('/input-iot/:takerId', (req, res) => {
+    taker.inputIoT(req, res);
+});
+
 module.exports = router;
