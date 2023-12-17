@@ -3,7 +3,6 @@ import asyncio
 import websockets
 import RPi.GPIO as GPIO
 from gpiozero import Motor
-import threading
 import time
 
 
@@ -61,9 +60,9 @@ async def on_open(ws):
     }
     await ws.send(json.dumps(login_message))
 
-async def user_input(ws, drug_id):
+async def user_input(ws, drug_id, s_type):
     type_m = {
-        "type": "finish-no",
+        "type": s_type,
         "raspberryId": "2XTV6D",
         "drugId": drug_id
     }
@@ -81,19 +80,26 @@ async def ws_listener(ws):
                 print(distance)
                 print("약 내보내기")
                 status = "" # 상태 초기화
-                motor.forward(speed=1) # 이건 속도 (0~1) 사이의 값으로 설정
-                m_Time = 0
+                #motor.forward(speed=1) # 이건 속도 (0~1) 사이의 값으로 설정
+                
                
                 while distance < 10:
-                    motor.stop()
+                    #motor.stop()
                     # 약 내보내고 나면 led 켜진 후 부저 울림
-                    distance = measure_distance()
                     led_on()
                     buzzer_on()
-                    while m_Time <= 600: #10분 카운트
+                    m_Time = 0
+                    while m_Time <= 10: #10분 카운트
                         m_Time += 1
+                        led_on()
+                        buzzer_on()
+                        time.sleep(1)
+                        led_on()
+                        buzzer_on()
+                        print(m_Time)
+                        distance = measure_distance()
                         if distance >= 100: # 거리가 100 이상이면 약 복용 완료로 판단
-                            drug_Id = data.get("drug_id")
+                            drug_Id = data.get("drugId")
                             s_type = "raspberry-finish"
                             print("약 복용 완료")
                             await user_input(ws, drug_Id, s_type)  # 서버에 약 복용 완료 메시지 전송
@@ -102,7 +108,7 @@ async def ws_listener(ws):
                     if status == "done": #상태가 done이 되면 while문 탈출
                         break
                     else:
-                        drug_Id = data.get("drug_id")
+                        drug_Id = data.get("drugId")
                         s_type = "finish-no"
                         print("10분 경과")
                         await user_input(ws, drug_Id, s_type)  # 서버에 약 복용 완료 메시지 전송
