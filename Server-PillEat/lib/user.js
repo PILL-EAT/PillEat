@@ -60,7 +60,7 @@ module.exports = {
                                     result: {
                                         userId: result[0].user_id,
                                         type: result[0].user_type,
-                                        takerId: 2
+                                        takerId: null
                                     }
                                 };
     
@@ -79,7 +79,7 @@ module.exports = {
                                     }
                                 };
     
-                                console.log(result[0].user_id)
+                                console.log(`보호자 로그인 id = ${result2[0].user_id}`)
                                 res.json(responseData);
                             }
                             
@@ -88,8 +88,6 @@ module.exports = {
                 }
             });
     },
-
-    
 
     logout: (req,res) => {
         var userId = req.params.userId;
@@ -219,7 +217,6 @@ module.exports = {
         });
     },
     
-
     // 내 정보 수정
     userUpdate: (req, res) => {
         const userId = req.params.userId;
@@ -247,7 +244,4 @@ module.exports = {
             }
         );
     },
-    
-    
-
 }

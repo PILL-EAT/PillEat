@@ -3,7 +3,6 @@ import asyncio
 import websockets
 import RPi.GPIO as GPIO
 from gpiozero import Motor
-import threading
 import time
 
 
@@ -61,11 +60,11 @@ async def on_open(ws):
     }
     await ws.send(json.dumps(login_message))
 
-async def user_input(ws):
+async def user_input(ws, drug_id, s_type):
     type_m = {
-        "type": "finish-no",
+        "type": s_type,
         "raspberryId": "2XTV6D",
-        "drugId": "1"
+        "drugId": drug_id
     }
     await ws.send(json.dumps(type_m))
 
@@ -76,32 +75,55 @@ async def ws_listener(ws):
 
         data = json.loads(message)
         if data.get("type") == "timeToPill": # 서버를 통해 timeToPill이라는 메세지를 받음
-            while True:
+            while True: 
                 distance = measure_distance()
                 print(distance)
                 print("약 내보내기")
                 status = "" # 상태 초기화
-                motor.forward(speed=1) # 이건 속도 (0~1) 사이의 값으로 설정
+                motor.forward(speed=0.5) # 이건 속도 (0~1) 사이의 값으로 설정
+                
                
                 while distance < 10:
                     motor.stop()
                     # 약 내보내고 나면 led 켜진 후 부저 울림
-                    distance = measure_distance()
                     led_on()
                     buzzer_on()
-                    if distance >= 100: # 거리가 100 이상이면 약 복용 완료로 판단
-                        print("약 복용 완료")
-                        await user_input(ws)  # 서버에 약 복용 완료 메시지 전송
-                        status = "done" # 상태를 done으로 바꿈
+                    m_Time = 0
+                    while m_Time <= 10: #10분 카운트
+                        m_Time += 1
+                        led_on()
+                        buzzer_on()
+                        time.sleep(1)
+                        led_on()
+                        buzzer_on()
+                        print(m_Time)
+                        distance = measure_distance()
+                        if distance >= 100: # 거리가 100 이상이면 약 복용 완료로 판단
+                            drug_Id = data.get("drugId")
+                            s_type = "raspberry-finish"
+                            print("약 복용 완료")
+                            await user_input(ws, drug_Id, s_type)  # 서버에 약 복용 완료 메시지 전송
+                            status = "done" # 상태를 done으로 바꿈
+                            break
+                        else:
+                            distance = measure_distance
+                            
+                    if status == "done": #상태가 done이 되면 while문 탈출
                         break
-                if status == "done": #상태가 done이 되면 while문 탈출
+                    else:
+                        drug_Id = data.get("drugId")
+                        s_type = "finish-no"
+                        print("10분 경과")
+                        await user_input(ws, drug_Id, s_type)  # 서버에 약 복용 완료 메시지 전송
+                        
+                if status == "done":
                     break
-                
                 
         if data.get("type") == "takePill": # 약 미리 내보낼 때
             while True:
+                print("약 추출")
                 distance = measure_distance()
-                motor.forward(speed = 1)  # 이건 속도 (0~1) 사이의 값으로 설정
+                motor.forward(speed = 0.5)  # 이건 속도 (0~1) 사이의 값으로 설정
                 if distance < 10: #거리가 10보댜 작으면 약 출력 완료로 판단 모터 멈춤
                     motor.stop()
                     break
@@ -119,7 +141,7 @@ async def main():
         if GPIO.input(15) == GPIO.HIGH: # 버튼이 눌리면 약을 통 안의 심에 감는다
             print("약 감기")
             while True:
-                motor.backward(speed = 1) # 약이 다 감겼다고 사용자가 생각하여 버튼을 누르면 약 감기 멈춤
+                motor.backward(speed = 0.5) # 약이 다 감겼다고 사용자가 생각하여 버튼을 누르면 약 감기 멈춤
                 if GPIO.input(15) == GPIO.LOW:
                     motor.stop()
                     break

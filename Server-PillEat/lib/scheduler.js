@@ -1,25 +1,19 @@
 // schedulerSetup.js
 const schedule = require('node-schedule');
 const db = require('./db');
+var moment = require('moment');
+require('moment-timezone');
 
 function setupScheduler() {
-    const Schedule = schedule.scheduleJob('1 0 * * *', () => {
-        var currentDate = new Date();
-        var dayOfWeek = currentDate.getDay();
-        dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
+    const Schedule = schedule.scheduleJob('0 0 * * *', () => {
+        moment.tz.setDefault("Asia/Seoul");
 
-        var year = currentDate.getFullYear();
-        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-        var day = ('0' + currentDate.getDate()).slice(-2);
-
-        var date = `${year}-${month}-${day}`;
-
-        dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
+        var date = moment().format('YYYY-MM-DD');
+        var dayOfWeek = moment().isoWeekday(); // 월요일은 1, 일요일은 7
 
         console.log(date)
         console.log(dayOfWeek)
 
-        var date = currentDate.toISOString().split('T')[0];
         db.query(`INSERT INTO pill_history (date, pill_alert_id, taker_id, pill_name, pill_kind, alert_time, alert_day, iotYN, is_taken)
                 SELECT '${date}' as date, pill_alert_id, taker_id, pill_name, pill_kind, alert_time, alert_day, iotYN, false as is_taken
                 FROM pill_alert
