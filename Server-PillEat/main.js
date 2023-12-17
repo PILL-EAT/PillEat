@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const webSocketSetup = require('./lib/socketEvents');
 const schedulerSetup = require('./lib/scheduler');
+var moment = require('moment');
+require('moment-timezone');
 
 const app = express();
 const http = require('http');
@@ -35,18 +37,15 @@ app.use('/manager', managerRouter);
 
 // 서버 리스닝
 app.listen(port,'0.0.0.0', () => {
-    // 서버가 실행될 때 pill_history 테이블에 현재 날짜의 알림 데이터 등록
-    var currentDate = new Date();
-    var dayOfWeek = currentDate.getDay(); // 일요일(0) ~ 토요일(6)까지의 숫자 반환
+    moment.tz.setDefault("Asia/Seoul");
 
-    // 기존의 getDay() 반환값을 월요일부터 1로 시작해서 일요일을 7로 조정
-    dayOfWeek = (dayOfWeek === 0) ? 7 : dayOfWeek;
-    
-    var year = currentDate.getFullYear();
-    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 1을 더하고 두 자리로 표시
-    var day = ('0' + currentDate.getDate()).slice(-2); // 일도 두 자리로 표시
+    var date = moment().format('YYYY-MM-DD');
+    var time = moment().format('HH:mm:ss');
 
-    var date = `${year}-${month}-${day}`;
+    var dayOfWeek = moment().isoWeekday(); // 월요일은 1, 일요일은 7
+
+    console.log(`현재 시간 ${date} ${time}`)
+    console.log(`현재 날짜 ${dayOfWeek}`)
         
         db.query(`SELECT * FROM pill_history WHERE date = ?`,[date], (err, result)=>{
             if (err){

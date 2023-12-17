@@ -1,6 +1,8 @@
 // webSocketSetup.js
 const expressWs = require('express-ws');
 const db = require('./db');
+var moment = require('moment');
+require('moment-timezone');
 
 // 클라이언트 소켓을 저장하는 Map 객체 생성
 const clients = new Map();
@@ -42,7 +44,7 @@ function handleMessage(ws, rawMessage) {
             case 'raspberryLogin':  // 라즈베리파이 로그인
                 handleRaspberryLogin(ws, message);
                 break;
-            case 'raspberryfinish': // iot기기를 통해 복용 완료
+            case 'raspberry-finish': // iot기기를 통해 복용 완료
                 handleRaspberryFinish(ws, message);
                 break;
             case 'finish':          // 앱을 통해 복용 완료
@@ -67,12 +69,8 @@ function handleMessage(ws, rawMessage) {
 
 //날짜 생성 함수
 function getCurrentDate() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-    const day = ('0' + currentDate.getDate()).slice(-2);
-
-    return `${year}-${month}-${day}`;
+    moment.tz.setDefault("Asia/Seoul");
+    return moment().format('YYYY-MM-DD');
 }
 
 // 클라이언트 로그인 처리 함수
@@ -107,17 +105,8 @@ function handleRaspberryLogin(ws, message) {
         message: `라즈베리파이 로그인, clientId: ${raspberryId}`
     };
 
-    // 테스트용 메시지
-    const testMessage = {
-        type: 'timeToPill',
-        message: `약 먹을 시간`,
-        drugId : 1
-    };
-
     const raspberrySocket = clients.get(raspberryId);
-
     raspberrySocket.send(JSON.stringify(loginMessage));
-    raspberrySocket.send(JSON.stringify(testMessage));
 }
 
 // 라즈베리파이에서 복용 완료 메시지 처리 함수
@@ -161,7 +150,7 @@ function handleRaspberryFinish(ws, message) {
 
                             const responseMessage = {
                                 type: 'finish',
-                                message: `복용자가 ${result3[0].alert_time} ${result3[0].pill_name}을 복용했습니다!`
+                                message: `복용자가 기기를 통해 ${result3[0].alert_time} ${result3[0].pill_name}을 복용했습니다!`
                             };
 
                             clientSocket.send(JSON.stringify(responseMessage));
@@ -186,14 +175,14 @@ function handleFinish(ws, message) {
 
     const date = getCurrentDate()
     // pill_history 테이블에 is_taken 속성을 1로 업데이트
-    db.query('UPDATE pill_history SET is_taken = 1 WHERE pill_alert_id = ?', [message.drugId], (err, result) => {
+    db.query('UPDATE pill_history SET is_taken = 1 WHERE pill_alert_id = ? and date = ?', [message.drugId, date], (err, result) => {
         if (err) {
             console.error('쿼리 오류:', err);
             return;
         }
 
         // 복용자의 보호자를 select
-        db.query('SELECT protector_id FROM user WHERE user_id = ? and date = ?', [message.clientId, date], (err, result2) => {
+        db.query('SELECT protector_id FROM user WHERE user_id = ?', [message.clientId], (err, result2) => {
             if (err) {
                 console.error('쿼리 오류:', err);
                 return;
@@ -241,7 +230,6 @@ function handleFinishNo(ws, message) {
             console.error('쿼리 오류:', err);
             return;
         }
-
             // 복용자의 보호자를 select
             db.query('SELECT protector_id FROM user WHERE user_id = ?', [user[0].user_id], (err, result2) => {
                 if (err) {
@@ -260,7 +248,6 @@ function handleFinishNo(ws, message) {
                                 console.error('쿼리 오류:', err);
                                 return;
                             }
-
                             const responseMessage = {
                                 type: 'finish-no',
                                 message: `복용자가 ${result3[0].alert_time} ${result3[0].pill_name}을 아직 복용하지 않았습니다.`
@@ -303,7 +290,7 @@ function handleTimeToPill(ws, message) {
     })
 }
 
-// 약 추출 메시지 처리 함수
+// 약 복용 시간 메시지 처리 함수
 function handleTakePill(ws, message) {
     console.log("복용자 약 추출");
 
@@ -313,15 +300,52 @@ function handleTakePill(ws, message) {
             console.error('쿼리 오류:', err);
             return;
         }
-        const raspberryId = iot[0].iot_code;
-        const raspberrySocket = clients.get(raspberryId);
 
-        const responseMessage = {
-            type: 'takePill',
-            message: `약 추출`,
-        };
+        // 복용자의 보호자를 select
+        db.query('SELECT protector_id FROM user WHERE user_id = ?', [user[0].user_id], (err, result2) => {
+            if (err) {
+                console.error('쿼리 오류:', err);
+                return;
+            }
 
-        raspberrySocket.send(JSON.stringify(responseMessage));
+            // 보호자가 있다면 소켓 메시지 전달
+            if (result2.length > 0) {
+                const userId = result2[0].protector_id;
+                const clientSocket = clients.get(userId);
+                
+                if (clientSocket) {
+                    db.query('SELECT * FROM pill_alert WHERE pill_alert_id = ?', [message.drugId], (err, result3) => {
+                        if (err) {
+                            console.error('쿼리 오류:', err);
+                            return;
+                        }
+
+                        const raspberryId = iot[0].iot_code;
+                        const raspberrySocket = clients.get(raspberryId);
+
+                        const raspberryMessage = {
+                            type: 'takePill',
+                            message: `약 추출`,
+                        };
+                        raspberrySocket.send(JSON.stringify(raspberryMessage));
+
+                        const appMessage = {
+                            type: 'takePill',
+                            message: `복용자가 약을 수동으로 추출하였습니다.`
+                        };
+
+                        clientSocket.send(JSON.stringify(appMessage));
+                    });
+                } else {
+                    // 보호자가 있지만 보호자가 소켓 연결이 되어있지 않을 경우
+                    console.log(`소켓에서 userId = ${userId}를 찾을 수 없습니다.`);
+                }
+            } else {
+                // 보호자가 없는 경우
+                console.log(`등록된 보호자가 없습니다. ${user[0].user_id}`);
+            }
+        });
+        
     })
 }
 
