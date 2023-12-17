@@ -24,7 +24,7 @@ class AllPillInfoRVAdapter(val context: Context, var result: AllPillInfoResponse
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = result.body.items.size
+    override fun getItemCount(): Int = result.body.totalCount
 
     override fun onBindViewHolder(holder: AllPillInfoRVAdapter.ViewHolder, position: Int) {
         holder.itemName.text = result.body.items[position].itemName

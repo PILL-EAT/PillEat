@@ -21,17 +21,24 @@ class HomeTakerPage: AppCompatActivity() {
         initBottomNavigation()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this@HomeTakerPage, MainTakerPage::class.java)
+        intent.putExtra("homeToMain", getData())
+        startActivity(intent)
+    }
+
+    private fun getTakerType(): String {
+        val getIntent = intent
+        val getData = getIntent.getStringExtra("takerType")!!
+        return getData
+    }
+
     private fun getData(): Int {
         val getIntent = intent
         val getData = getIntent.getIntExtra("userId", 0)
         Log.d("HOME", getData.toString())
         return getData
-    }
-
-    private fun getData2(): Int {
-        val getIntent = intent
-        val getData2 = getIntent.getIntExtra("userIdx", 0)
-        return getData2
     }
 
     private fun getData3(): Int {
@@ -42,19 +49,15 @@ class HomeTakerPage: AppCompatActivity() {
 
     private fun sendData() {
         val intent = Intent(this@HomeTakerPage, UpdatePage::class.java)
-        if(getData() == 0) {
-            intent.putExtra("userId", getData2())
-        } else {
-            intent.putExtra("userId", getData())
-        }
+        intent.putExtra("userId", getData())
         startActivity(intent)
     }
 
     private fun initBottomNavigation() {
         val bundle = Bundle().apply {
             putInt("userId", getData())
-            putInt("userIdx", getData2())
             putInt("clientId", getData3())
+            putString("takerType", getTakerType())
         }
 
         val takingYnFragment = TakingYnFragment()

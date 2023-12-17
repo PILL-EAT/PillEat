@@ -34,6 +34,11 @@ class WebSocketManager private constructor(private val context: Context) {
         }
     }
 
+    fun closeWebSocket() {
+        webSocket?.cancel()
+        webSocket = null
+    }
+
     fun getWebSocket(): WebSocket {
         if (webSocket == null) {
             // WebSocket 연결 초기화 로직
@@ -64,6 +69,12 @@ class WebSocketManager private constructor(private val context: Context) {
                 val message = json.getString("message")
 
                 if(type == "finish") {
+                    showNotification(type, message)
+                } else if (type == "finish-no") {
+                    showNotification(type, message)
+                } else if (type == "takePill") {
+                    showNotification(type, message)
+                } else if (type == "login") {
                     showNotification(type, message)
                 }
 
