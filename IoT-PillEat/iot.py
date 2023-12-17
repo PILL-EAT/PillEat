@@ -9,7 +9,7 @@ import time
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(16, GPIO.OUT) # LED
 GPIO.setup(25, GPIO.OUT) # 부저
-GPIO.setup(15, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # 버튼 눌리면 on
+GPIO.setup(15, GPIO.IN, pull_up_down=GPIO.PUD_UP) # 버튼 눌리면 low
 GPIO.setup(23, GPIO.OUT) # Trig = 23 초음파 신호 전송핀
 GPIO.setup(24, GPIO.IN)  # Echo = 24 초음파 수신하는 수신 핀
 motor = Motor(21, 25)
@@ -79,8 +79,9 @@ async def ws_listener(ws):
                 distance = measure_distance()
                 print(distance)
                 print("약 내보내기")
+                print(data.get("drugId"))
                 status = "" # 상태 초기화
-                motor.forward(speed=0.5) # 이건 속도 (0~1) 사이의 값으로 설정
+                motor.forward(speed = 0.5) # 이건 속도 (0~1) 사이의 값으로 설정
                 
                
                 while distance < 10:
@@ -106,7 +107,7 @@ async def ws_listener(ws):
                             status = "done" # 상태를 done으로 바꿈
                             break
                         else:
-                            distance = measure_distance
+                            distance = measure_distance()
                             
                     if status == "done": #상태가 done이 되면 while문 탈출
                         break
@@ -123,10 +124,22 @@ async def ws_listener(ws):
             while True:
                 print("약 추출")
                 distance = measure_distance()
-                motor.forward(speed = 0.5)  # 이건 속도 (0~1) 사이의 값으로 설정
+                motor.forward(speed = 0.5)
                 if distance < 10: #거리가 10보댜 작으면 약 출력 완료로 판단 모터 멈춤
                     motor.stop()
                     break
+                
+async def button_listener(): #버튼이 눌려있으면 약을 감고 떼면 약 감기를 멈춤
+    while True:
+        if GPIO.input(15) == GPIO.LOW:
+            print("약 감기 시작")
+            motor.backward(speed=1)
+            # 버튼이 떼질 때까지 대기
+            while GPIO.input(15) == GPIO.LOW:
+                await asyncio.sleep(0.1)
+            motor.stop()
+            print("약 감기 멈춤")
+        await asyncio.sleep(0.1)
             
 
 async def main():
@@ -135,16 +148,11 @@ async def main():
         await on_open(ws)
 
         listener_task = asyncio.create_task(ws_listener(ws))
+        button_task = asyncio.create_task(button_listener())
 
-        await asyncio.gather(listener_task)
+        await asyncio.gather(listener_task, button_task)
         
-        if GPIO.input(15) == GPIO.HIGH: # 버튼이 눌리면 약을 통 안의 심에 감는다
-            print("약 감기")
-            while True:
-                motor.backward(speed = 0.5) # 약이 다 감겼다고 사용자가 생각하여 버튼을 누르면 약 감기 멈춤
-                if GPIO.input(15) == GPIO.LOW:
-                    motor.stop()
-                    break
-            
+        
 if __name__ == "__main__":
     asyncio.run(main())
+
