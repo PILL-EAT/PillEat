@@ -115,7 +115,7 @@ async def ws_listener(ws):
                         drug_Id = data.get("drugId")
                         s_type = "finish-no"
                         print("10분 경과")
-                        await user_input(ws, drug_Id, s_type)  # 서버에 약 복용 완료 메시지 전송
+                        await user_input(ws, drug_Id, s_type)  # 서버에 약 복용하지 않았다는 메시지 전송
                         
                 if status == "done":
                     break
