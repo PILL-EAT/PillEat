@@ -61,11 +61,11 @@ async def on_open(ws):
     }
     await ws.send(json.dumps(login_message))
 
-async def user_input(ws):
+async def user_input(ws, drug_id):
     type_m = {
         "type": "finish-no",
         "raspberryId": "2XTV6D",
-        "drugId": "1"
+        "drugId": drug_id
     }
     await ws.send(json.dumps(type_m))
 
@@ -90,8 +90,9 @@ async def ws_listener(ws):
                     led_on()
                     buzzer_on()
                     if distance >= 100: # 거리가 100 이상이면 약 복용 완료로 판단
+                        drug_Id = data.get("drug_id")
                         print("약 복용 완료")
-                        await user_input(ws)  # 서버에 약 복용 완료 메시지 전송
+                        await user_input(ws, drug_Id)  # 서버에 약 복용 완료 메시지 전송
                         status = "done" # 상태를 done으로 바꿈
                         break
                 if status == "done": #상태가 done이 되면 while문 탈출
