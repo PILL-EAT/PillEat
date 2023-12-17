@@ -76,12 +76,13 @@ async def ws_listener(ws):
 
         data = json.loads(message)
         if data.get("type") == "timeToPill": # 서버를 통해 timeToPill이라는 메세지를 받음
-            while True:
+            while True: 
                 distance = measure_distance()
                 print(distance)
                 print("약 내보내기")
                 status = "" # 상태 초기화
                 motor.forward(speed=1) # 이건 속도 (0~1) 사이의 값으로 설정
+                m_Time = 0
                
                 while distance < 10:
                     motor.stop()
@@ -89,15 +90,25 @@ async def ws_listener(ws):
                     distance = measure_distance()
                     led_on()
                     buzzer_on()
-                    if distance >= 100: # 거리가 100 이상이면 약 복용 완료로 판단
-                        drug_Id = data.get("drug_id")
-                        print("약 복용 완료")
-                        await user_input(ws, drug_Id)  # 서버에 약 복용 완료 메시지 전송
-                        status = "done" # 상태를 done으로 바꿈
+                    while m_Time <= 600: #10분 카운트
+                        m_Time += 1
+                        if distance >= 100: # 거리가 100 이상이면 약 복용 완료로 판단
+                            drug_Id = data.get("drug_id")
+                            s_type = "raspberry-finish"
+                            print("약 복용 완료")
+                            await user_input(ws, drug_Id, s_type)  # 서버에 약 복용 완료 메시지 전송
+                            status = "done" # 상태를 done으로 바꿈
+                            break
+                    if status == "done": #상태가 done이 되면 while문 탈출
                         break
-                if status == "done": #상태가 done이 되면 while문 탈출
+                    else:
+                        drug_Id = data.get("drug_id")
+                        s_type = "finish-no"
+                        print("10분 경과")
+                        await user_input(ws, drug_Id, s_type)  # 서버에 약 복용 완료 메시지 전송
+                        
+                if status == "done":
                     break
-                
                 
         if data.get("type") == "takePill": # 약 미리 내보낼 때
             while True:
