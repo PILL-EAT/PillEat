@@ -58,6 +58,7 @@ function handleMessage(ws, rawMessage) {
                 break;
             case 'takePill':        // 약 추출 메시지 전달
                 handleTakePill(ws, message);
+                break;
             default:
                 console.log('알 수 없는 메시지 타입:', message.type);
                 break;
@@ -113,7 +114,7 @@ function handleRaspberryLogin(ws, message) {
 function handleRaspberryFinish(ws, message) {
     console.log(`복용자 iot기기 통해서 복용 완료, clientId ${message.raspberryId}, alert_id ${message.drugId}`);
 
-    const date = getCurrentDate()
+    const date = getCurrentDate();
 
     // raspberryId를 통해 복용자의 id select
     db.query('SELECT * FROM user LEFT JOIN iot ON user.iot_id = iot.iot_id WHERE iot_code = ?', [message.raspberryId], (err, user) => {
@@ -128,45 +129,55 @@ function handleRaspberryFinish(ws, message) {
                 console.error('쿼리 오류:', err);
                 return;
             }
-            console.log(user[0].user_id)
-            // 복용자의 보호자를 select
-            db.query('SELECT protector_id FROM user WHERE user_id = ?', [user[0].user_id], (err, result2) => {
+            console.log(user[0].user_id);
+
+            db.query('SELECT * FROM pill_alert WHERE pill_alert_id = ?', [message.drugId], (err, result3) => {
                 if (err) {
                     console.error('쿼리 오류:', err);
                     return;
                 }
 
-                // 보호자가 있다면 소켓 메시지 전달
-                if (result2.length > 0) {
-                    const userId = result2[0].protector_id;
-                    const clientSocket = clients.get(userId);
-                    
-                    if (clientSocket) {
-                        db.query('SELECT * FROM pill_alert WHERE pill_alert_id = ?', [message.drugId], (err, result3) => {
-                            if (err) {
-                                console.error('쿼리 오류:', err);
-                                return;
-                            }
+                // 복용자에게 메시지 전달
+                const takerSocket = clients.get(user[0].user_id);
+                const takerMessage = {
+                    type: 'finish',
+                    message: `기기를 통해 ${result3[0].alert_time} ${result3[0].pill_name}을 복용했습니다!`
+                };
+                takerSocket.send(JSON.stringify(takerMessage));
 
+                // 복용자의 보호자를 select
+                db.query('SELECT protector_id FROM user WHERE user_id = ?', [user[0].user_id], (err, result2) => {
+                    if (err) {
+                        console.error('쿼리 오류:', err);
+                        return;
+                    }
+
+                    // 보호자가 있다면 소켓 메시지 전달
+                    if (result2.length > 0) {
+                        const userId = result2[0].protector_id;
+                        const clientSocket = clients.get(userId);
+
+                        if (clientSocket) {
                             const responseMessage = {
                                 type: 'finish',
                                 message: `복용자가 기기를 통해 ${result3[0].alert_time} ${result3[0].pill_name}을 복용했습니다!`
                             };
 
                             clientSocket.send(JSON.stringify(responseMessage));
-                        });
+                        } else {
+                            // 보호자가 있지만 보호자가 소켓 연결이 되어있지 않을 경우
+                            console.log(`소켓에서 userId = ${userId}를 찾을 수 없습니다.`);
+                        }
                     } else {
-                        // 보호자가 있지만 보호자가 소켓 연결이 되어있지 않을 경우
-                        console.log(`소켓에서 userId = ${userId}를 찾을 수 없습니다.`);
+                        // 보호자가 없는 경우
+                        console.log(`등록된 보호자가 없습니다. ${user[0].user_id}`);
                     }
-                } else {
-                    // 보호자가 없는 경우
-                    console.log(`등록된 보호자가 없습니다. ${user[0].user_id}`);
-                }
+                });
             });
         });
     });
 }
+
 
 
 // 앱을 통한 복용 완료 메시지 처리 함수
@@ -271,26 +282,51 @@ function handleFinishNo(ws, message) {
 function handleTimeToPill(ws, message) {
     console.log("복용자 약 먹을 시간");
 
-    // 복용자에게 등록된 raspberrypi_code 찾기
-    db.query('SELECT * FROM iot LEFT JOIN user ON iot.iot_id = user.iot_id WHERE user.user_id = ?', [message.clientId], (err, iot) => {
+    // 기기에 등록된 약인지 확인
+    db.query('SELECT * FROM pill_alert where pill_alert_id = ?', [message.drugId], (err,result)=>{
         if (err) {
             console.error('쿼리 오류:', err);
             return;
         }
-        const raspberryId = iot[0].iot_code;
-        const raspberrySocket = clients.get(raspberryId);
-
-        const responseMessage = {
-            type: 'timeToPill',
-            message: `약 먹을 시간`,
-            drugId : message.drugId
-        };
-
-        raspberrySocket.send(JSON.stringify(responseMessage));
+        if (result[0].iotYN === 1) {
+            // 복용자에게 등록된 raspberrypi_code 찾기
+            db.query('SELECT * FROM iot LEFT JOIN user ON iot.iot_id = user.iot_id WHERE user.user_id = ?', [message.clientId], (err, iot) => {
+                if (err) {
+                    console.error('쿼리 오류:', err);
+                    return;
+                }
+                if (iot.length > 0) {
+                    const raspberryId = iot[0].iot_code;
+                    const raspberrySocket = clients.get(raspberryId);
+                    
+                    if (raspberrySocket) {
+                        const responseMessage = {
+                            type: 'timeToPill',
+                            message: `약 먹을 시간`,
+                            drugId : message.drugId
+                        };
+    
+                        raspberrySocket.send(JSON.stringify(responseMessage));
+                    } else {
+                        // 기기가 소켓에 연결되어 있지 않은경우
+                        console.log(`소켓에서 resberryId = ${iot[0].iot_code}를 찾을 수 없습니다.`);
+                    } 
+                }
+                else {
+                    // 등록된 iot기기가 없을 경우
+                    console.log(`등록된 기기가 없습니다. ${message.clientId}`);
+                }
+                
+            })
+        }
+        else {
+            // 기기에 등록된 약이 아닐 경우
+            console.log(`기기에 등록된 약이 아닙니다. ${message.clientId}`);
+        }
     })
 }
 
-// 약 복용 시간 메시지 처리 함수
+// 약 추출 기능
 function handleTakePill(ws, message) {
     console.log("복용자 약 추출");
 
@@ -300,52 +336,58 @@ function handleTakePill(ws, message) {
             console.error('쿼리 오류:', err);
             return;
         }
+        // 등록된 기기가 있다면 
+        if (iot.length > 0){
+            const raspberryId = iot[0].iot_code;
+            const raspberrySocket = clients.get(raspberryId);
 
-        // 복용자의 보호자를 select
-        db.query('SELECT protector_id FROM user WHERE user_id = ?', [user[0].user_id], (err, result2) => {
-            if (err) {
-                console.error('쿼리 오류:', err);
-                return;
-            }
+            const raspberryMessage = {
+                type: 'takePill',
+                message: `약 추출`,
+            };
+            raspberrySocket.send(JSON.stringify(raspberryMessage));
 
-            // 보호자가 있다면 소켓 메시지 전달
-            if (result2.length > 0) {
-                const userId = result2[0].protector_id;
-                const clientSocket = clients.get(userId);
-                
-                if (clientSocket) {
-                    db.query('SELECT * FROM pill_alert WHERE pill_alert_id = ?', [message.drugId], (err, result3) => {
-                        if (err) {
-                            console.error('쿼리 오류:', err);
-                            return;
-                        }
 
-                        const raspberryId = iot[0].iot_code;
-                        const raspberrySocket = clients.get(raspberryId);
-
-                        const raspberryMessage = {
-                            type: 'takePill',
-                            message: `약 추출`,
-                        };
-                        raspberrySocket.send(JSON.stringify(raspberryMessage));
-
-                        const appMessage = {
-                            type: 'takePill',
-                            message: `복용자가 약을 수동으로 추출하였습니다.`
-                        };
-
-                        clientSocket.send(JSON.stringify(appMessage));
-                    });
-                } else {
-                    // 보호자가 있지만 보호자가 소켓 연결이 되어있지 않을 경우
-                    console.log(`소켓에서 userId = ${userId}를 찾을 수 없습니다.`);
+            // 복용자의 보호자를 select
+            db.query('SELECT protector_id FROM user WHERE user_id = ?', [message.clientId], (err, result2) => {
+                if (err) {
+                    console.error('쿼리 오류:', err);
+                    return;
                 }
-            } else {
-                // 보호자가 없는 경우
-                console.log(`등록된 보호자가 없습니다. ${user[0].user_id}`);
-            }
-        });
-        
+
+                // 보호자가 있다면 소켓 메시지 전달
+                if (result2.length > 0) {
+                    const userId = result2[0].protector_id;
+                    const clientSocket = clients.get(userId);
+                    
+                    if (clientSocket) {
+                        db.query('SELECT * FROM pill_alert WHERE pill_alert_id = ?', [message.drugId], (err, result3) => {
+                            if (err) {
+                                console.error('쿼리 오류:', err);
+                                return;
+                            }
+                            const appMessage = {
+                                type: 'takePill',
+                                message: `복용자가 약을 수동으로 추출하였습니다.`
+                            };
+
+                            clientSocket.send(JSON.stringify(appMessage));
+                        });
+                    } else {
+                        // 보호자가 있지만 보호자가 소켓 연결이 되어있지 않을 경우
+                        console.log(`소켓에서 userId = ${userId}를 찾을 수 없습니다.`);
+                    }
+                } else {
+                    // 보호자가 없는 경우
+                    console.log(`등록된 보호자가 없습니다. ${message.clientId}`);
+                }
+            });
+        }
+        else{
+            // 등록된 iot기기가 없을 경우
+            console.log(`등록된 기기가 없습니다. ${message.clientId}`);
+            return
+        }
     })
 }
 

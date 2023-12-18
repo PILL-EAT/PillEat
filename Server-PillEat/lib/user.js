@@ -36,7 +36,7 @@ module.exports = {
                     };
                     res.json(responseData);
                 } else {
-                    if (result[0].user_type === 'taker') {
+                    if (result[0].user_type === 'taker' || result[0].user_type === 'manager') {
                         // 로그인 성공
                         const responseData = {
                             isSuccess: true,
@@ -79,7 +79,7 @@ module.exports = {
                                     }
                                 };
     
-                                console.log(`보호자 로그인 id = ${result2[0].user_id}`)
+                                console.log(`보호자 로그인 id = ${result[0].user_id}`)
                                 res.json(responseData);
                             }
                             
