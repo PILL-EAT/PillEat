@@ -90,7 +90,7 @@ async def ws_listener(ws):
                     led_on()
                     buzzer_on()
                     m_Time = 0
-                    while m_Time <= 10: #10분 카운트
+                    while m_Time <= 600: #10분 카운트
                         m_Time += 1
                         led_on()
                         buzzer_on()
