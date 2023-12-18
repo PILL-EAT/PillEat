@@ -12,7 +12,7 @@ GPIO.setup(25, GPIO.OUT) # 부저
 GPIO.setup(15, GPIO.IN, pull_up_down=GPIO.PUD_UP) # 버튼 눌리면 low
 GPIO.setup(23, GPIO.OUT) # Trig = 23 초음파 신호 전송핀
 GPIO.setup(24, GPIO.IN)  # Echo = 24 초음파 수신하는 수신 핀
-motor = Motor(21, 25)
+motor = Motor(20, 21)
 
 def led_on(): #LED 켜는 함수 생성
     try:
@@ -84,13 +84,13 @@ async def ws_listener(ws):
                 motor.forward(speed = 0.5) # 이건 속도 (0~1) 사이의 값으로 설정
                 
                
-                while distance < 10:
+                while distance < 8:
                     motor.stop()
                     # 약 내보내고 나면 led 켜진 후 부저 울림
                     led_on()
                     buzzer_on()
                     m_Time = 0
-                    while m_Time <= 600: #10분 카운트
+                    while m_Time <= 10: #10분 카운트
                         m_Time += 1
                         led_on()
                         buzzer_on()
@@ -99,7 +99,7 @@ async def ws_listener(ws):
                         buzzer_on()
                         print(m_Time)
                         distance = measure_distance()
-                        if distance >= 100: # 거리가 100 이상이면 약 복용 완료로 판단
+                        if distance >= 20: # 거리가 20 이상이면 약 복용 완료로 판단
                             drug_Id = data.get("drugId")
                             s_type = "raspberry-finish"
                             print("약 복용 완료")
@@ -115,7 +115,7 @@ async def ws_listener(ws):
                         drug_Id = data.get("drugId")
                         s_type = "finish-no"
                         print("10분 경과")
-                        await user_input(ws, drug_Id, s_type)  # 서버에 약 복용하지 않았다는 메시지 전송
+                        await user_input(ws, drug_Id, s_type)  # 서버에 약 복용 완료 메시지 전송
                         
                 if status == "done":
                     break
@@ -124,12 +124,13 @@ async def ws_listener(ws):
             while True:
                 print("약 추출")
                 distance = measure_distance()
-                motor.forward(speed = 0.5)
+                motor.forward(speed = 0.3)
                 if distance < 10: #거리가 10보댜 작으면 약 출력 완료로 판단 모터 멈춤
                     motor.stop()
+                    print("약 추출 완료")
                     break
                 
-async def button_listener(): #버튼이 눌려있으면 약을 감고 떼면 약 감기를 멈춤
+async def button_listener():
     while True:
         if GPIO.input(15) == GPIO.LOW:
             print("약 감기 시작")
@@ -155,4 +156,3 @@ async def main():
         
 if __name__ == "__main__":
     asyncio.run(main())
-
