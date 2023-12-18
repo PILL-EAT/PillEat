@@ -74,8 +74,6 @@ class WebSocketManager private constructor(private val context: Context) {
                     showNotification(type, message)
                 } else if (type == "takePill") {
                     showNotification(type, message)
-                } else if (type == "login") {
-                    showNotification(type, message)
                 }
 
             } catch (e: JSONException) {

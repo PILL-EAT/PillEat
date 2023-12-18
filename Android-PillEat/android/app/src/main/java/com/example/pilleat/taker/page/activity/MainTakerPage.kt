@@ -1,6 +1,5 @@
 package com.example.pilleat.taker.page.activity
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -11,7 +10,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.example.pilleat.R
 import com.example.pilleat.all.page.activity.SearchPage
 import com.example.pilleat.all.page.activity.SettingPage
@@ -23,7 +21,6 @@ import com.example.pilleat.taker.service.EnrollDeviceService
 import com.example.pilleat.taker.table.EnrollDevice
 import com.example.pilleat.taker.table.PhoneNumber
 import com.example.pilleat.taker.view.EnrollDeviceView
-
 
 class MainTakerPage : AppCompatActivity(), SetTakerView, SetTakerDialog.SetTakerDialogListener, EnrollDeviceView {
     private lateinit var binding: ActivityMaintakerBinding
@@ -82,12 +79,24 @@ class MainTakerPage : AppCompatActivity(), SetTakerView, SetTakerDialog.SetTaker
                 val userInput = inputText.text.toString()
                 val phone = PhoneNumber(userInput)
                 Log.d("text", userInput)
-                if(getData() == 0 || getData2() == 0) {
-                    setTaker(phone, getData4())
-                } else if(getData() == 0 || getData4() == 0) {
-                    setTaker(phone, getData2())
-                } else if(getData2() == 0 || getData4() == 0) {
-                    setTaker(phone, getData())
+                if(getData() == 0) {
+                    if(getData2() == 0) {
+                        setTaker(phone, getData4())
+                    } else {
+                        setTaker(phone, getData2())
+                    }
+                } else if(getData2() == 0) {
+                    if(getData() == 0) {
+                        setTaker(phone, getData4())
+                    } else {
+                        setTaker(phone, getData())
+                    }
+                } else {
+                    if(getData() == 0) {
+                        setTaker(phone, getData2())
+                    } else {
+                        setTaker(phone, getData())
+                    }
                 }
             }
             .setNeutralButton("취소", null)
@@ -108,12 +117,24 @@ class MainTakerPage : AppCompatActivity(), SetTakerView, SetTakerDialog.SetTaker
                 val userInput = inputText.text.toString()
                 val iotCode = EnrollDevice(userInput)
                 Log.d("IOT-CODE", iotCode.toString())
-                if(getData() == 0 || getData2() == 0) {
-                    setIotDevice(iotCode, getData4())
-                } else if(getData() == 0 || getData4() == 0) {
-                    setIotDevice(iotCode, getData2())
-                } else if(getData2() == 0 || getData4() == 0) {
-                    setIotDevice(iotCode, getData())
+                if(getData() == 0) {
+                    if(getData2() == 0) {
+                        setIotDevice(iotCode, getData4())
+                    } else {
+                        setIotDevice(iotCode, getData2())
+                    }
+                } else if(getData2() == 0) {
+                    if(getData() == 0) {
+                        setIotDevice(iotCode, getData4())
+                    } else {
+                        setIotDevice(iotCode, getData())
+                    }
+                } else {
+                    if(getData() == 0) {
+                        setIotDevice(iotCode, getData2())
+                    } else {
+                        setIotDevice(iotCode, getData())
+                    }
                 }
             }
             .setNeutralButton("취소", null)

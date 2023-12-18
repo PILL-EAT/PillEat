@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/back_green"
+    android:background="@color/unfocus_green"
     android:id="@+id/enroll_item_lo"
     android:layout_margin="5dp"
     android:padding="5dp"

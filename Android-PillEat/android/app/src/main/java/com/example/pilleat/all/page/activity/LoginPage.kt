@@ -54,7 +54,7 @@ class LoginPage : AppCompatActivity(), LoginView {
             takerPage(result)
         } else if(result.type == "protector") {
             protectorPage(result)
-        } else {
+        } else if (result.type == "manager") {
             managerPage()
         }
     }

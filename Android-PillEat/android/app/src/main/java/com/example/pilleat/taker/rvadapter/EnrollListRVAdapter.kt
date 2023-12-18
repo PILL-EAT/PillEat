@@ -69,7 +69,7 @@ class EnrollListRVAdapter() : RecyclerView.Adapter<EnrollListRVAdapter.ViewHolde
         holder.alert_day.text = weekStringBuilder.toString().trim()
 
         if(result[position].iot.toString() == "0") {
-            holder.binding.enrollItemLo.setBackgroundResource(R.color.back_gray)
+            holder.binding.enrollItemLo.setBackgroundResource(R.color.back_green)
         }
 
         if(result[position].iot.toString() == "0") {

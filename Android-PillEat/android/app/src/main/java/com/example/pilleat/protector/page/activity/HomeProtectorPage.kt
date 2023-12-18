@@ -62,7 +62,7 @@ class HomeProtectorPage: AppCompatActivity() {
         enrollPillListFragment.arguments = bundle
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.main_frm, takingYnFragment)
+            .replace(R.id.main_frm, enrollPillListFragment)
             .commitAllowingStateLoss()
 
         binding.mainBnv.setOnItemSelectedListener { item ->
