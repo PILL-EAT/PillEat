@@ -72,9 +72,10 @@ CREATE TABLE pill_history (
   is_taken BOOLEAN NOT NULL,
   
   PRIMARY KEY (pill_history_id),
-  FOREIGN KEY (pill_alert_id) REFERENCES pill_alert(pill_alert_id) ON DELETE SET NULL
+  FOREIGN KEY (pill_alert_id) REFERENCES pill_alert(pill_alert_id) ON DELETE SET NULL,
   FOREIGN KEY (taker_id) REFERENCES user(user_id) ON DELETE SET NULL
 );
+
 
 
 INSERT INTO pill_history (date, pill_alert_id, is_taken) 

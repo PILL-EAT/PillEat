@@ -296,7 +296,7 @@ module.exports = {
     inputIoT: (req, res) => {
         var takerId = req.params.takerId;
         var inputData = req.body;
-        console.log(`inputIoT ${takerId} ${inputData}`);
+        console.log(`inputIoT takerId = ${takerId} ${inputData}`);
 
         console.log(inputData.iotCode)
 
