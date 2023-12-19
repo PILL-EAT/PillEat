@@ -205,7 +205,7 @@
         android:background="@drawable/main_btn"
         android:fontFamily="@font/main_font"
         android:text="정보 수정하기"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/join_mode_lo"
